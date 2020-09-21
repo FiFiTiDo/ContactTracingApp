@@ -94,22 +94,7 @@ public class TrackingService extends Service {
         Long next = nextLocation.getTime();
         Long diffMin = (next - last) * 1000 * 60;
 
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        String defVal = "medium";
-        String timeSel = pref.getString("sedentary", defVal);
-        if (timeSel == null) timeSel = defVal;
-
-        int min = 15;
-        switch (timeSel) {
-            case "short":
-                min = 5;
-                break;
-            case "long":
-                min = 45;
-                break;
-        }
-
-        if (diffMin >= min) {
+        if (diffMin >= PreferencesManager.getSedentaryLength(this)) {
             Log.d("Tracing", "User has been sedentary for the configured period of time.");
         }
 
@@ -124,12 +109,12 @@ public class TrackingService extends Service {
             return;
         }
 
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        int defVal = 2;
-        String strVal = pref.getString("tracking_distance", String.valueOf(defVal));
-        int distance = strVal == null ? defVal : Integer.parseInt(strVal);
-
-        loc.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, distance, listener);
+        loc.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                0,
+                PreferencesManager.getTrackingDistance(this),
+                listener
+        );
     }
 
     public void stopTracking() {
