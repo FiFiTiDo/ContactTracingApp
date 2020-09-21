@@ -2,12 +2,20 @@
     <string name="app_name">Contact Tracing</string>
     <string name="welcome_message">Welcome to the contact tracing app!</string>
 
+    <!-- Permission dialog -->
+    <string name="perm_rationale_title">Oops!</string>
+    <string name="perm_rational_text">
+        It seems you have not given the app permission to your location, this is necessary for us
+        to be able to carry out the contact tracing.
+    </string>
+
     <!-- Toast -->
     <string name="too_short_distance">That distance is too short, the minimum is 1m</string>
     <string name="too_far_distance">That distance is too far, the maximum is 10m</string>
     <string name="uuid_generated_toast">New UUID generated successfully</string>
     <string name="service_not_running">Tracing service not running</string>
     <string name="service_already_running">Tracing service already running</string>
+    <string name="unable_to_obtain_permission">The app cannot function without permission to access your location</string>
 
     <!-- Buttons -->
     <string name="start_button">Start Tracing</string>

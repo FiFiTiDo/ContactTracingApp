@@ -1,6 +1,7 @@
 package net.fifitido.contact;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.room.Room;
@@ -80,10 +81,16 @@ public class MainActivity extends AppCompatActivity implements CheckPermissionLi
         if (requestCode == CheckPermissionListener.REQUEST_ID) {
             if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    // show rationale
-                    requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, CheckPermissionListener.REQUEST_ID);
+                    new AlertDialog.Builder(this)
+                            .setTitle(R.string.perm_rationale_title)
+                            .setMessage(R.string.perm_rational_text)
+                            .setPositiveButton("Ok", (dialogInterface, i) -> requestPermissions(
+                                new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
+                                CheckPermissionListener.REQUEST_ID
+                            ))
+                            .create().show();
                 } else {
-                    // show cannot run
+                    Toast.makeText(this, getString(R.string.unable_to_obtain_permission), Toast.LENGTH_LONG).show();
                 }
             }
         } else {
