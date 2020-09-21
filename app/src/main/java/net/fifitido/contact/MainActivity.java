@@ -158,4 +158,9 @@ public class MainActivity extends AppCompatActivity implements PermissionManager
             });
         }).start();
     }
+
+    @Override
+    public void onDistanceUpdate(int distance) {
+        if (tsb != null) tsb.restartTracking(distance);
+    }
 }

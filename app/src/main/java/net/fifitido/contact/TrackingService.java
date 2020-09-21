@@ -62,9 +62,13 @@ public class TrackingService extends Service {
             TrackingService.this.startTracking();
         }
 
-        public void restartTracking() {
+        private void startTracking(int distance) {
+            TrackingService.this.startTracking(distance);
+        }
+
+        public void restartTracking(int distance) {
             TrackingService.this.stopTracking();
-            startTracking();
+            startTracking(distance);
         }
 
         public void stopTracking() {
@@ -101,20 +105,20 @@ public class TrackingService extends Service {
         lastLocation = nextLocation;
     };
 
+
     @SuppressLint("MissingPermission") // Permission is definitely checked
-    public void startTracking() {
+    private void startTracking(int distance) {
         if (permissionManager == null) throw new RuntimeException("Tracking service requires a permission manager.");
         if (!permissionManager.hasPermission()) {
             permissionManager.acquirePermission();
             return;
         }
 
-        loc.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                0,
-                PreferencesManager.getTrackingDistance(this),
-                listener
-        );
+        loc.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, distance, listener);
+    }
+
+    public void startTracking() {
+        startTracking(PreferencesManager.getTrackingDistance(this));
     }
 
     public void stopTracking() {

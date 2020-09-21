@@ -48,6 +48,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     return false;
                 }
 
+                listener.onDistanceUpdate(intVal);
                 return true;
             });
         }
