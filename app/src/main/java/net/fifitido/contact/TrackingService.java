@@ -1,6 +1,6 @@
 package net.fifitido.contact;
 
-import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -8,7 +8,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,11 +17,10 @@ import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 
-import net.fifitido.contact.listeners.CheckPermissionListener;
+import net.fifitido.contact.listeners.PermissionManager;
 
 public class TrackingService extends Service {
     public static final String CHANNEL_ID = "TrackingServiceChannel";
@@ -57,7 +55,7 @@ public class TrackingService extends Service {
         }
     }
 
-    public CheckPermissionListener permissionListener;
+    public PermissionManager permissionManager;
 
     public class TrackingServiceBinder extends Binder {
         public void startTracking() {
@@ -74,8 +72,8 @@ public class TrackingService extends Service {
             stopSelf();
         }
 
-        public void setPermissionListener(CheckPermissionListener listener) {
-            TrackingService.this.permissionListener = listener;
+        public void setPermissionManager(PermissionManager listener) {
+            TrackingService.this.permissionManager = listener;
         }
     }
 
@@ -118,10 +116,11 @@ public class TrackingService extends Service {
         lastLocation = nextLocation;
     };
 
+    @SuppressLint("MissingPermission") // Permission is definitely checked
     public void startTracking() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (permissionListener != null)
-                permissionListener.onCheckPermission();
+        if (permissionManager == null) throw new RuntimeException("Tracking service requires a permission manager.");
+        if (!permissionManager.hasPermission()) {
+            permissionManager.acquirePermission();
             return;
         }
 

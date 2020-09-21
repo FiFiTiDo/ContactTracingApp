@@ -17,13 +17,13 @@ import android.os.IBinder;
 import android.widget.Toast;
 
 import net.fifitido.contact.database.AppDatabase;
-import net.fifitido.contact.listeners.CheckPermissionListener;
+import net.fifitido.contact.listeners.PermissionManager;
 import net.fifitido.contact.listeners.MainPageButtonListener;
 import net.fifitido.contact.listeners.SettingsListener;
 
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements CheckPermissionListener, MainPageButtonListener, SettingsListener {
+public class MainActivity extends AppCompatActivity implements PermissionManager, MainPageButtonListener, SettingsListener {
     private AppDatabase db = null;
     private static final String LAST_RUN = "last_run";
     private TrackingService.TrackingServiceBinder tsb = null;
@@ -68,17 +68,20 @@ public class MainActivity extends AppCompatActivity implements CheckPermissionLi
 
     // Permission management
     @Override
-    public void onCheckPermission() {
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, CheckPermissionListener.REQUEST_ID);
-        }
+    public boolean hasPermission() {
+        return checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    public void acquirePermission() {
+        requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PermissionManager.REQUEST_ID);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == CheckPermissionListener.REQUEST_ID) {
+        if (requestCode == PermissionManager.REQUEST_ID) {
             if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
                     new AlertDialog.Builder(this)
@@ -86,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements CheckPermissionLi
                             .setMessage(R.string.perm_rational_text)
                             .setPositiveButton("Ok", (dialogInterface, i) -> requestPermissions(
                                 new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
-                                CheckPermissionListener.REQUEST_ID
+                                PermissionManager.REQUEST_ID
                             ))
                             .create().show();
                 } else {
@@ -103,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements CheckPermissionLi
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             tsb = (TrackingService.TrackingServiceBinder) iBinder;
+            tsb.setPermissionManager(MainActivity.this);
             tsb.startTracking();
         }
 
