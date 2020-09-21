@@ -1,0 +1,14 @@
+<resources>
+    <!-- Sedentary Preference -->
+    <string-array name="sedentary_entries">
+        <item>&gt; 5 minutes</item>
+        <item>&gt; 15 minutes</item>
+        <item>&gt; 45 minutes</item>
+    </string-array>
+
+    <string-array name="sedentary_values">
+        <item>short</item>
+        <item>medium</item>
+        <item>long</item>
+    </string-array>
+</resources>

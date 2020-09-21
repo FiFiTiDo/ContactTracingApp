@@ -1,0 +1,9 @@
+package net.fifitido.contact.listeners;
+
+import java.io.Serializable;
+
+public interface MainPageButtonListener extends Serializable {
+    public void onStartTracking();
+    public void onStopTracking();
+    public void onOpenSettings();
+}

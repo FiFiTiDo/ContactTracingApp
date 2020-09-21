@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Contact Tracing</string>
+    <string name="welcome_message">Welcome to the contact tracing app!</string>
+
+    <!-- Toast -->
+    <string name="too_short_distance">That distance is too short, the minimum is 1m</string>
+    <string name="too_far_distance">That distance is too far, the maximum is 10m</string>
+    <string name="uuid_generated_toast">New UUID generated successfully</string>
+    <string name="service_not_running">Tracing service not running</string>
+    <string name="service_already_running">Tracing service already running</string>
+
+    <!-- Buttons -->
+    <string name="start_button">Start Tracing</string>
+    <string name="stop_button">Stop Tracing</string>
+
+    <!-- Menu item -->
+    <string name="settings_menu_item">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="tracing_header">Tracing Parameters</string>
+    <string name="uuid_header">Unique Id</string>
+
+    <!-- Location Preferences -->
+    <string name="tracing_distance_title">Tracing Distance</string>
+    <string name="sedentary_time_title">Sedentary Time</string>
+
+    <!-- Uuid Preferences -->
+    <string name="regenerate_uuid_title">Regenerate Unique Id</string>
+    <string name="regenerate_uuid_desc">Regenerate your unique user id</string>
+</resources>
