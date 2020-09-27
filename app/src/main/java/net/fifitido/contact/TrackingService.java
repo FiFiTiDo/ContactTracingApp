@@ -101,9 +101,10 @@ public class TrackingService extends Service {
             if (lastLocation != null) {
                 Long last = lastLocation.getTime();
                 Long next = nextLocation.getTime();
-                Long diffMin = (next - last) / 1000 / 60;
+                long diffMin = (next - last) / 1000 / 60;
 
-                Log.d("Tracing", "User has been sedentary for " + diffMin.toString() + " minutes.");
+                if (diffMin > 0)
+                    Log.d("Tracing", "User has been sedentary for " + diffMin + " minutes.");
 
                 if (diffMin >= PreferencesManager.getSedentaryLength(TrackingService.this)) {
                     Log.d("Tracing", "User has been sedentary for the configured period of time.");
