@@ -13,9 +13,11 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
@@ -93,18 +95,28 @@ public class TrackingService extends Service {
     }
 
     private Location lastLocation;
-    private LocationListener listener = nextLocation -> {
-        Long last = lastLocation.getTime();
-        Long next = nextLocation.getTime();
-        Long diffMin = (next - last) * 1000 * 60;
+    private LocationListener listener = new LocationListener() {
+        @Override
+        public void onLocationChanged(@NonNull Location nextLocation) {
+            if (lastLocation != null) {
+                Long last = lastLocation.getTime();
+                Long next = nextLocation.getTime();
+                Long diffMin = (next - last) / 1000 / 60;
 
-        if (diffMin >= PreferencesManager.getSedentaryLength(this)) {
-            Log.d("Tracing", "User has been sedentary for the configured period of time.");
+                Log.d("Tracing", "User has been sedentary for " + diffMin.toString() + " minutes.");
+
+                if (diffMin >= PreferencesManager.getSedentaryLength(TrackingService.this)) {
+                    Log.d("Tracing", "User has been sedentary for the configured period of time.");
+                }
+            }
+            lastLocation = nextLocation;
         }
 
-        lastLocation = nextLocation;
-    };
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
 
+        }
+    };
 
     @SuppressLint("MissingPermission") // Permission is definitely checked
     private void startTracking(int distance) {
