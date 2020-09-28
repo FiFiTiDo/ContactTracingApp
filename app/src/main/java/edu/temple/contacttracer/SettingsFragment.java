@@ -1,4 +1,4 @@
-package net.fifitido.contact;
+package edu.temple.contacttracer;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-import net.fifitido.contact.listeners.SettingsListener;
+import edu.temple.contacttracer.listeners.SettingsListener;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
     private SettingsListener listener;

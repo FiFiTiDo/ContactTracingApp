@@ -1,4 +1,4 @@
-package net.fifitido.contact;
+package edu.temple.contacttracer;
 
 import java.util.Calendar;
 import java.util.Date;

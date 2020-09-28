@@ -1,10 +1,10 @@
-package net.fifitido.contact;
+package edu.temple.contacttracer;
 
 import android.util.Log;
 
-import net.fifitido.contact.database.AppDatabase;
-import net.fifitido.contact.database.UniqueId;
-import net.fifitido.contact.database.UniqueIdDao;
+import edu.temple.contacttracer.database.AppDatabase;
+import edu.temple.contacttracer.database.UniqueId;
+import edu.temple.contacttracer.database.UniqueIdDao;
 
 import java.util.List;
 

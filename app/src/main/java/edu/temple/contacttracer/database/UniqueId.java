@@ -1,4 +1,4 @@
-package net.fifitido.contact.database;
+package edu.temple.contacttracer.database;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;

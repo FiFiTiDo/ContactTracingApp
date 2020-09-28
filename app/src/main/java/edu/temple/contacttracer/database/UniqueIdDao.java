@@ -1,4 +1,4 @@
-package net.fifitido.contact.database;
+package edu.temple.contacttracer.database;
 
 import androidx.room.Dao;
 import androidx.room.Delete;

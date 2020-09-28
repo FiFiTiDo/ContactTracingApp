@@ -1,4 +1,4 @@
-package net.fifitido.contact;
+package edu.temple.contacttracer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -16,10 +16,10 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Toast;
 
-import net.fifitido.contact.database.AppDatabase;
-import net.fifitido.contact.listeners.PermissionManager;
-import net.fifitido.contact.listeners.MainPageButtonListener;
-import net.fifitido.contact.listeners.SettingsListener;
+import edu.temple.contacttracer.database.AppDatabase;
+import edu.temple.contacttracer.listeners.PermissionManager;
+import edu.temple.contacttracer.listeners.MainPageButtonListener;
+import edu.temple.contacttracer.listeners.SettingsListener;
 
 import java.util.Date;
 

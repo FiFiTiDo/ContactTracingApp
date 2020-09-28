@@ -1,4 +1,4 @@
-package net.fifitido.contact;
+package edu.temple.contacttracer;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import net.fifitido.contact.listeners.MainPageButtonListener;
+import edu.temple.contacttracer.listeners.MainPageButtonListener;
 
 /**
  * A simple {@link Fragment} subclass.

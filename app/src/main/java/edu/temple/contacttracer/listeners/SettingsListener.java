@@ -1,4 +1,4 @@
-package net.fifitido.contact.listeners;
+package edu.temple.contacttracer.listeners;
 
 public interface SettingsListener {
     public void onGenerateId();
