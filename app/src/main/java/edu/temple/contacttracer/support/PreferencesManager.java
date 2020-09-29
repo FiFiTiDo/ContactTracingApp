@@ -24,9 +24,12 @@ public class PreferencesManager {
         if (timeSel == null) timeSel = defVal;
 
         switch (timeSel) {
-            case "short": return 5;
-            case "long": return 45;
-            default: return 15;
+            case "short":
+                return 5;
+            case "long":
+                return 45;
+            default:
+                return 15;
         }
     }
 }

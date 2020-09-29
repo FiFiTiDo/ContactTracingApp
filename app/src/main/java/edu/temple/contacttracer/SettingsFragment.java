@@ -10,7 +10,7 @@ import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-import edu.temple.contacttracer.support.listeners.SettingsListener;
+import edu.temple.contacttracer.support.interfaces.SettingsListener;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
     private SettingsListener listener;
@@ -32,9 +32,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         EditTextPreference tracingPref = getPreferenceManager().findPreference("tracing_distance");
         if (tracingPref != null) {
-            tracingPref.setOnBindEditTextListener(editText -> {
-                editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
-            });
+            tracingPref.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED));
 
             tracingPref.setOnPreferenceChangeListener((preference, newValue) -> {
                 int intVal = Integer.parseInt((String) newValue);

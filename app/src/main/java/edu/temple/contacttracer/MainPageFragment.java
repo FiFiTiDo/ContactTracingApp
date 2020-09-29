@@ -2,11 +2,6 @@ package edu.temple.contacttracer;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,7 +9,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import edu.temple.contacttracer.support.listeners.MainPageButtonListener;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import edu.temple.contacttracer.support.interfaces.MainPageButtonListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,17 +21,10 @@ import edu.temple.contacttracer.support.listeners.MainPageButtonListener;
  * create an instance of this fragment.
  */
 public class MainPageFragment extends Fragment {
-    private static final String LISTENER_KEY = "click_listener";
     private MainPageButtonListener listener = null;
 
     public MainPageFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
     }
 
     /**
@@ -43,6 +35,12 @@ public class MainPageFragment extends Fragment {
      */
     public static MainPageFragment newInstance() {
         return new MainPageFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override

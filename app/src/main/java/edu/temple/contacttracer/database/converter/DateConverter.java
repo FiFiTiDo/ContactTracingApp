@@ -1,6 +1,7 @@
 package edu.temple.contacttracer.database.converter;
 
 import androidx.room.TypeConverter;
+
 import java.util.Date;
 
 public class DateConverter {

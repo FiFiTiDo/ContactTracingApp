@@ -20,16 +20,39 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import edu.temple.contacttracer.database.dao.UniqueIdDao;
-import edu.temple.contacttracer.database.entity.UniqueId;
 import edu.temple.contacttracer.support.ApiManager;
 import edu.temple.contacttracer.support.PreferencesManager;
-import edu.temple.contacttracer.support.listeners.PermissionManager;
+import edu.temple.contacttracer.support.interfaces.PermissionManager;
 
 public class TrackingService extends Service {
     public static final String CHANNEL_ID = "TrackingServiceChannel";
+    public PermissionManager permissionManager;
     private LocationManager loc;
     private ApiManager api;
+    private final LocationListener listener = new LocationListener() {
+        @Override
+        public void onLocationChanged(@NonNull Location nextLocation) {
+            if (App.lastLocation != null) {
+                Long last = App.lastLocation.getTime();
+                Long next = nextLocation.getTime();
+                long diffMin = (next - last) / 1000 / 60;
+
+                if (diffMin > 0)
+                    Log.d("Tracing", "User has been sedentary for " + diffMin + " minutes.");
+
+                if (diffMin >= PreferencesManager.getSedentaryLength(TrackingService.this)) {
+                    Log.d("Tracing", "User has been sedentary for the configured period of time.");
+                    api.sendLocation(App.db.uniqueIdDao().getMostRecent(), App.lastLocation, nextLocation.getTime());
+                }
+            }
+            App.lastLocation = nextLocation;
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+    };
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -63,7 +86,36 @@ public class TrackingService extends Service {
         }
     }
 
-    public PermissionManager permissionManager;
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return new TrackingServiceBinder();
+    }
+
+    @Override
+    public void onDestroy() {
+        stopTracking();
+    }
+
+    @SuppressLint("MissingPermission") // Permission is definitely checked
+    private void startTracking(int distance) {
+        if (permissionManager == null)
+            throw new RuntimeException("Tracking service requires a permission manager.");
+        if (!permissionManager.hasPermission()) {
+            permissionManager.acquirePermission();
+            return;
+        }
+
+        loc.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, distance, listener);
+    }
+
+    public void startTracking() {
+        startTracking(PreferencesManager.getTrackingDistance(this));
+    }
+
+    public void stopTracking() {
+        loc.removeUpdates(listener);
+    }
 
     public class TrackingServiceBinder extends Binder {
         public void startTracking() {
@@ -87,65 +139,5 @@ public class TrackingService extends Service {
         public void setPermissionManager(PermissionManager listener) {
             TrackingService.this.permissionManager = listener;
         }
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return new TrackingServiceBinder();
-    }
-
-    @Override
-    public void onDestroy() {
-        stopTracking();
-    }
-
-    private LocationListener listener = new LocationListener() {
-        @Override
-        public void onLocationChanged(@NonNull Location nextLocation) {
-            if (App.lastLocation != null) {
-                Long last = App.lastLocation.getTime();
-                Long next = nextLocation.getTime();
-                long diffMin = (next - last) / 1000 / 60;
-
-                if (diffMin > 0)
-                    Log.d("Tracing", "User has been sedentary for " + diffMin + " minutes.");
-
-                if (diffMin >= PreferencesManager.getSedentaryLength(TrackingService.this)) {
-                    Log.d("Tracing", "User has been sedentary for the configured period of time.");
-                    new Thread(() -> {
-                        UniqueIdDao dao = App.db.uniqueIdDao();
-                        UniqueId id = dao.getToday();
-
-                        api.sendLocation(id, App.lastLocation, nextLocation.getTime());
-                    }).start();
-                }
-            }
-            App.lastLocation = nextLocation;
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-    };
-
-    @SuppressLint("MissingPermission") // Permission is definitely checked
-    private void startTracking(int distance) {
-        if (permissionManager == null) throw new RuntimeException("Tracking service requires a permission manager.");
-        if (!permissionManager.hasPermission()) {
-            permissionManager.acquirePermission();
-            return;
-        }
-
-        loc.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, distance, listener);
-    }
-
-    public void startTracking() {
-        startTracking(PreferencesManager.getTrackingDistance(this));
-    }
-
-    public void stopTracking() {
-        loc.removeUpdates(listener);
     }
 }

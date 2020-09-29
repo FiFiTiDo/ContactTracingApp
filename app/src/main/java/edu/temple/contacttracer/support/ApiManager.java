@@ -4,22 +4,19 @@ import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import edu.temple.contacttracer.database.entity.UniqueId;
 
 public class ApiManager {
-    private RequestQueue queue;
     private static final String SERVER_URL = "https://kamorris.com/lab/ct_tracking.php";
+    private final RequestQueue queue;
 
     public ApiManager(Context ctx) {
         this.queue = Volley.newRequestQueue(ctx);
@@ -48,9 +45,10 @@ public class ApiManager {
             @Override
             public Map<String, String> getHeaders() {
                 return new HashMap<String, String>() {{
-                    put("Content-Type","application/x-www-form-urlencoded");
+                    put("Content-Type", "application/x-www-form-urlencoded");
                 }};
             }
         };
+        queue.add(req);
     }
 }

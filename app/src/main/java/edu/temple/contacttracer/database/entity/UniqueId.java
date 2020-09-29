@@ -23,6 +23,7 @@ public class UniqueId {
         generatedAt = new Date();
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "UniqueId{" +

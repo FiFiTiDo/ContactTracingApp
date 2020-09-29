@@ -8,6 +8,7 @@ import android.location.LocationManager;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+
 import edu.temple.contacttracer.App;
 
 public class LocationUtils {

@@ -1,9 +1,5 @@
 package edu.temple.contacttracer;
 
-import android.app.Service;
-import android.content.Intent;
-import android.location.Location;
-import android.os.IBinder;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -15,20 +11,19 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
-import edu.temple.contacttracer.database.dao.ContactEventDao;
 import edu.temple.contacttracer.database.entity.ContactEvent;
 import edu.temple.contacttracer.support.LocationUtils;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static final String TRACKING_TOPIC = "TRACKING";
 
+    public MyFirebaseMessagingService() {
+    }
+
     public static void subscribeToTopic() {
         FirebaseMessaging.getInstance().subscribeToTopic("TRACKING").addOnCompleteListener(
                 task -> Log.d("Firebase", "Successfully subscribed to the topic TRACKING")
         );
-    }
-
-    public MyFirebaseMessagingService() {
     }
 
     @Override

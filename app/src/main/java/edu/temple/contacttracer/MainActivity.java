@@ -1,11 +1,5 @@
 package edu.temple.contacttracer;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.room.Room;
-
 import android.Manifest;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -13,19 +7,33 @@ import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.google.firebase.messaging.FirebaseMessaging;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
-import edu.temple.contacttracer.database.AppDatabase;
-import edu.temple.contacttracer.support.GenerateIdRunnable;
-import edu.temple.contacttracer.support.listeners.PermissionManager;
-import edu.temple.contacttracer.support.listeners.MainPageButtonListener;
-import edu.temple.contacttracer.support.listeners.SettingsListener;
+import edu.temple.contacttracer.support.interfaces.MainPageButtonListener;
+import edu.temple.contacttracer.support.interfaces.PermissionManager;
+import edu.temple.contacttracer.support.interfaces.SettingsListener;
 
 public class MainActivity extends AppCompatActivity implements PermissionManager, MainPageButtonListener, SettingsListener {
     private TrackingService.TrackingServiceBinder tsb = null;
+    // Tracing service management
+    private final ServiceConnection tracingServiceConn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            tsb = (TrackingService.TrackingServiceBinder) iBinder;
+            tsb.setPermissionManager(MainActivity.this);
+            tsb.startTracking();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            tsb = null;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements PermissionManager
 
     @Override
     public void acquirePermission() {
-        requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PermissionManager.REQUEST_ID);
+        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PermissionManager.REQUEST_ID);
     }
 
     @Override
@@ -64,8 +72,8 @@ public class MainActivity extends AppCompatActivity implements PermissionManager
                             .setTitle(R.string.perm_rationale_title)
                             .setMessage(R.string.perm_rational_text)
                             .setPositiveButton("Ok", (dialogInterface, i) -> requestPermissions(
-                                new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
-                                PermissionManager.REQUEST_ID
+                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                    PermissionManager.REQUEST_ID
                             ))
                             .create().show();
                 } else {
@@ -76,21 +84,6 @@ public class MainActivity extends AppCompatActivity implements PermissionManager
             tsb.startTracking();
         }
     }
-
-    // Tracing service management
-    private ServiceConnection tracingServiceConn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            tsb = (TrackingService.TrackingServiceBinder) iBinder;
-            tsb.setPermissionManager(MainActivity.this);
-            tsb.startTracking();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            tsb = null;
-        }
-    };
 
     @Override
     public void onStartTracking() {
@@ -128,10 +121,12 @@ public class MainActivity extends AppCompatActivity implements PermissionManager
     @Override
     public void onGenerateId() {
         new Thread(() -> {
-            new GenerateIdRunnable(App.db).run();
-            runOnUiThread(() -> {
-                Toast.makeText(MainActivity.this, getString(R.string.uuid_generated_toast), Toast.LENGTH_LONG).show();
-            });
+            App.db.generateId(true);
+            runOnUiThread(() -> Toast.makeText(
+                MainActivity.this,
+                getString(R.string.uuid_generated_toast),
+                Toast.LENGTH_LONG
+            ).show());
         }).start();
     }
 
