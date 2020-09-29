@@ -17,6 +17,7 @@ public abstract class AppDatabase extends RoomDatabase {
     private static final String LAST_RUN = "last_run";
 
     public abstract UniqueIdDao uniqueIdDao();
+    public abstract LocationDao locationDao();
 
     public void checkDaily(SharedPreferences prefs) {
         Date lastRun = new Date(prefs.getLong(LAST_RUN, 0));
