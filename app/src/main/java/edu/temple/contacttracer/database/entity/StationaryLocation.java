@@ -31,6 +31,15 @@ public class StationaryLocation {
     @NonNull
     public Long sedentaryEnd;
 
+    public StationaryLocation(int id, @NonNull UUID uuid, @NonNull Double latitude, @NonNull Double longitude, @NonNull Long sedentaryBegin, @NonNull Long sedentaryEnd) {
+        this.id = id;
+        this.uuid = uuid;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.sedentaryBegin = sedentaryBegin;
+        this.sedentaryEnd = sedentaryEnd;
+    }
+
     public StationaryLocation(@NonNull UUID uuid, @NonNull Location location, @NonNull Long endTime) {
         this.uuid = uuid;
         this.latitude = location.getLatitude();

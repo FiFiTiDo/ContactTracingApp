@@ -10,8 +10,8 @@
     </string>
 
     <!-- Toast -->
-    <string name="too_short_distance">That distance is too short, the minimum is 1m</string>
-    <string name="too_far_distance">That distance is too far, the maximum is 10m</string>
+    <string name="too_small">That value is too small, the minimum is %d</string>
+    <string name="too_large">That value is too large, the maximum is %d</string>
     <string name="uuid_generated_toast">New UUID generated successfully</string>
     <string name="service_not_running">Tracing service not running</string>
     <string name="service_already_running">Tracing service already running</string>
@@ -29,8 +29,8 @@
     <string name="uuid_header">Unique Id</string>
 
     <!-- Location Preferences -->
-    <string name="tracing_distance_title">Tracing Distance</string>
-    <string name="sedentary_time_title">Sedentary Time</string>
+    <string name="tracing_distance_title">Tracing Distance (in meters)</string>
+    <string name="sedentary_time_title">Sedentary Time (in minutes)</string>
 
     <!-- Uuid Preferences -->
     <string name="regenerate_uuid_title">Regenerate Unique Id</string>

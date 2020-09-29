@@ -2,14 +2,12 @@ package edu.temple.contacttracer;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.text.InputType;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
+import edu.temple.contacttracer.support.EditIntegerPreference;
 import edu.temple.contacttracer.support.interfaces.SettingsListener;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
@@ -30,25 +28,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
-        EditTextPreference tracingPref = getPreferenceManager().findPreference("tracing_distance");
+        EditIntegerPreference tracingPref = getPreferenceManager().findPreference("tracing_distance");
         if (tracingPref != null) {
-            tracingPref.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED));
-
-            tracingPref.setOnPreferenceChangeListener((preference, newValue) -> {
-                int intVal = Integer.parseInt((String) newValue);
-                if (intVal < 1) {
-                    Toast.makeText(getActivity(), getString(R.string.too_short_distance), Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-
-                if (intVal > 10) {
-                    Toast.makeText(getActivity(), getString(R.string.too_far_distance), Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-
-                listener.onDistanceUpdate(intVal);
-                return true;
-            });
+            tracingPref.setOnNumberChangedListener((preference, newValue) -> listener.onDistanceUpdate(newValue));
         }
 
         Preference regeneratePref = getPreferenceManager().findPreference("regenerate_uuid");

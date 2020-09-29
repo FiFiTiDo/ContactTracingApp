@@ -10,26 +10,17 @@ public class PreferencesManager {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
     }
 
-    public static int getTrackingDistance(Context ctx) {
+    private static int getInteger(Context ctx, String key, int defaultValue) {
         SharedPreferences pref = getDefaultSharedPreferences(ctx);
-        int defVal = 2;
-        String strVal = pref.getString("tracking_distance", String.valueOf(defVal));
-        return strVal == null ? defVal : Integer.parseInt(strVal);
+        String strVal = pref.getString(key, String.valueOf(defaultValue));
+        return strVal == null ? defaultValue : Integer.parseInt(strVal);
+    }
+
+    public static int getTrackingDistance(Context ctx) {
+        return getInteger(ctx, "tracking_distance", 2);
     }
 
     public static int getSedentaryLength(Context ctx) {
-        SharedPreferences pref = getDefaultSharedPreferences(ctx);
-        String defVal = "medium";
-        String timeSel = pref.getString("sedentary", defVal);
-        if (timeSel == null) timeSel = defVal;
-
-        switch (timeSel) {
-            case "short":
-                return 5;
-            case "long":
-                return 45;
-            default:
-                return 15;
-        }
+        return getInteger(ctx, "sedentary", 5);
     }
 }

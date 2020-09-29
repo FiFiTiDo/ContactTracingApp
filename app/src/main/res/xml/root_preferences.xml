@@ -1,21 +1,21 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="@string/tracing_header">
-
-        <EditTextPreference
+        <edu.temple.contacttracer.support.EditIntegerPreference
+            minValue="1"
+            maxValue="10"
             app:key="tracing_distance"
             app:defaultValue="2"
             app:title="@string/tracing_distance_title"
             app:useSimpleSummaryProvider="true" />
 
-        <ListPreference
+        <edu.temple.contacttracer.support.EditIntegerPreference
+            minValue="1"
+            maxValue="10"
             app:key="sedentary"
-            app:defaultValue="medium"
-            app:entries="@array/sedentary_entries"
-            app:entryValues="@array/sedentary_values"
+            app:defaultValue="5"
             app:title="@string/sedentary_time_title"
             app:useSimpleSummaryProvider="true" />
-
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/uuid_header">
