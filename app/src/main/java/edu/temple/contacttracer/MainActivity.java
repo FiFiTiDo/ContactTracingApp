@@ -10,22 +10,21 @@ import android.Manifest;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
+
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import edu.temple.contacttracer.database.AppDatabase;
 import edu.temple.contacttracer.listeners.PermissionManager;
 import edu.temple.contacttracer.listeners.MainPageButtonListener;
 import edu.temple.contacttracer.listeners.SettingsListener;
 
-import java.util.Date;
-
 public class MainActivity extends AppCompatActivity implements PermissionManager, MainPageButtonListener, SettingsListener {
     private AppDatabase db = null;
-    private static final String LAST_RUN = "last_run";
     private TrackingService.TrackingServiceBinder tsb = null;
 
     @Override
@@ -33,8 +32,9 @@ public class MainActivity extends AppCompatActivity implements PermissionManager
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setupFirebase();
         setupDatabase();
-        checkId();
+        db.checkDaily(this.getPreferences(MODE_PRIVATE));
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.mainFrame);
         if (fragment == null) fragment = MainPageFragment.newInstance();
@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements PermissionManager
                 .beginTransaction()
                 .replace(R.id.mainFrame, fragment)
                 .commit();
-
     }
 
     // Database management
@@ -51,19 +50,11 @@ public class MainActivity extends AppCompatActivity implements PermissionManager
             db = Room.databaseBuilder(this, AppDatabase.class, "contact-tracing").build();
     }
 
-    void checkId() {
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        Date lastRun = new Date(prefs.getLong(LAST_RUN, 0));
-        Date today = DateUtils.today();
-
-        if (lastRun.before(today)) {
-            new Thread(() -> {
-                new DailyUpdateRunnable(db).run();
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putLong(LAST_RUN, DateUtils.now());
-                editor.apply();
-            }).start();
-        }
+    // Firebase management
+    private void setupFirebase() {
+        FirebaseMessaging.getInstance().subscribeToTopic("TRACKING").addOnCompleteListener(
+            task -> Log.d("Firebase", "Successfully subscribed to the topic TRACKING")
+        );
     }
 
     // Permission management
