@@ -35,8 +35,10 @@ public class TrackingService extends Service {
         PendingIntent pi = PendingIntent.getActivity(this, 0, notifIntent, 0);
 
         Notification notif = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_notification_icon)
                 .setContentTitle("Contact Tracer")
                 .setContentText("Tracking your location for contact tracing purposes.")
+                .setContentIntent(pi)
                 .build();
 
         startForeground(1, notif);
@@ -93,12 +95,11 @@ public class TrackingService extends Service {
         stopTracking();
     }
 
-    private Location lastLocation;
     private LocationListener listener = new LocationListener() {
         @Override
         public void onLocationChanged(@NonNull Location nextLocation) {
-            if (lastLocation != null) {
-                Long last = lastLocation.getTime();
+            if (App.lastLocation != null) {
+                Long last = App.lastLocation.getTime();
                 Long next = nextLocation.getTime();
                 long diffMin = (next - last) / 1000 / 60;
 
@@ -109,7 +110,6 @@ public class TrackingService extends Service {
                     Log.d("Tracing", "User has been sedentary for the configured period of time.");
                 }
             }
-            lastLocation = nextLocation;
             App.lastLocation = nextLocation;
         }
 

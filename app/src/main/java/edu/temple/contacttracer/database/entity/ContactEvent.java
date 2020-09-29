@@ -3,12 +3,15 @@ package edu.temple.contacttracer.database.entity;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-import java.util.Date;
 import java.util.UUID;
 
 @Entity(tableName = "contact_event")
 public class ContactEvent {
+    @PrimaryKey(autoGenerate = true)
+    public int id;
+
     @NonNull
     public UUID uuid;
 

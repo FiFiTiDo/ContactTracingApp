@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements PermissionManager
         setContentView(R.layout.activity_main);
 
         MyFirebaseMessagingService.subscribeToTopic();
-        App.db.checkDaily(this.getPreferences(MODE_PRIVATE));
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.mainFrame);
         if (fragment == null) fragment = MainPageFragment.newInstance();

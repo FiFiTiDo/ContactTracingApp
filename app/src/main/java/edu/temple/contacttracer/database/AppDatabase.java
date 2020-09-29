@@ -3,6 +3,7 @@ package edu.temple.contacttracer.database;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.preference.PreferenceManager;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
@@ -15,11 +16,13 @@ import edu.temple.contacttracer.database.converter.UuidConverter;
 import edu.temple.contacttracer.database.dao.ContactEventDao;
 import edu.temple.contacttracer.database.dao.StationaryLocationDao;
 import edu.temple.contacttracer.database.dao.UniqueIdDao;
+import edu.temple.contacttracer.database.entity.ContactEvent;
+import edu.temple.contacttracer.database.entity.StationaryLocation;
 import edu.temple.contacttracer.database.entity.UniqueId;
 import edu.temple.contacttracer.support.DailyUpdateRunnable;
 import edu.temple.contacttracer.support.DateUtils;
 
-@Database(entities = {UniqueId.class}, version = 1)
+@Database(entities = {UniqueId.class, StationaryLocation.class, ContactEvent.class}, version = 1)
 @TypeConverters({ DateConverter.class, UuidConverter.class })
 public abstract class AppDatabase extends RoomDatabase {
     private static final String LAST_RUN = "last_run";
@@ -28,7 +31,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract StationaryLocationDao locationDao();
     public abstract ContactEventDao eventDao();
 
-    public void checkDaily(SharedPreferences prefs) {
+    public void checkDaily(Context ctx) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         Date lastRun = new Date(prefs.getLong(LAST_RUN, 0));
         Date today = DateUtils.today();
 

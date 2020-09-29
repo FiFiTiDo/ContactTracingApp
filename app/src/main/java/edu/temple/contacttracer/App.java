@@ -14,5 +14,6 @@ public class App extends Application {
         super.onCreate();
 
         db = AppDatabase.getInstance(this);
+        db.checkDaily(this);
     }
 }

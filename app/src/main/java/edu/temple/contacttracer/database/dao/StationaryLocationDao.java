@@ -11,7 +11,7 @@ import edu.temple.contacttracer.database.entity.StationaryLocation;
 
 @Dao
 public interface StationaryLocationDao {
-    @Query("SELECT * FROM stationary_location WHERE stored_at > DATE('now', '-14 day')")
+    @Query("SELECT * FROM stationary_location WHERE sedentary_end > DATE('now', '-14 day')")
     List<StationaryLocation> getAllOld();
 
     @Insert

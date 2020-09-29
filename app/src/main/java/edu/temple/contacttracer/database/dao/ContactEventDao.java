@@ -11,7 +11,7 @@ import edu.temple.contacttracer.database.entity.ContactEvent;
 
 @Dao
 public interface ContactEventDao {
-    @Query("SELECT * FROM contact_event WHERE created_at > DATE('now', '-14 day')")
+    @Query("SELECT * FROM contact_event WHERE sedentary_end > DATE('now', '-14 day')")
     List<ContactEvent> getAllOld();
 
     @Insert
