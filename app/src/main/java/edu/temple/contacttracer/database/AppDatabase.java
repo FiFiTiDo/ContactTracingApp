@@ -10,6 +10,7 @@ import java.util.Date;
 
 import edu.temple.contacttracer.database.converter.DateConverter;
 import edu.temple.contacttracer.database.converter.UuidConverter;
+import edu.temple.contacttracer.database.dao.ContactEventDao;
 import edu.temple.contacttracer.database.dao.StationaryLocationDao;
 import edu.temple.contacttracer.database.dao.UniqueIdDao;
 import edu.temple.contacttracer.database.entity.UniqueId;
@@ -23,6 +24,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract UniqueIdDao uniqueIdDao();
     public abstract StationaryLocationDao locationDao();
+    public abstract ContactEventDao eventDao();
 
     public void checkDaily(SharedPreferences prefs) {
         Date lastRun = new Date(prefs.getLong(LAST_RUN, 0));
@@ -37,4 +39,5 @@ public abstract class AppDatabase extends RoomDatabase {
             }).start();
         }
     }
+
 }

@@ -3,6 +3,8 @@ package edu.temple.contacttracer.support;
 import android.util.Log;
 
 import edu.temple.contacttracer.database.AppDatabase;
+import edu.temple.contacttracer.database.dao.ContactEventDao;
+import edu.temple.contacttracer.database.entity.ContactEvent;
 import edu.temple.contacttracer.database.entity.StationaryLocation;
 import edu.temple.contacttracer.database.dao.StationaryLocationDao;
 import edu.temple.contacttracer.database.entity.UniqueId;
@@ -31,5 +33,10 @@ public class DailyUpdateRunnable implements Runnable {
         List<StationaryLocation> oldLocations = locationDao.getAllOld();
         locationDao.deleteAll(oldLocations.toArray(new StationaryLocation[] {}));
         Log.d("DailyTask", "Deleted " + oldLocations.size() + " old locations");
+
+        ContactEventDao eventDao = db.eventDao();
+        List<ContactEvent> oldEvents = eventDao.getAllOld();
+        eventDao.deleteAll(oldEvents.toArray(new ContactEvent[] {}));
+        Log.d("DailyTask", "Deleted " + oldEvents.size() + " old contact events");
     }
 }
