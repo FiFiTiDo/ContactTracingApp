@@ -1,5 +1,7 @@
 package edu.temple.contacttracer.database.entity;
 
+import android.location.Location;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -29,11 +31,11 @@ public class StationaryLocation {
     @NonNull
     public Long sedentaryEnd;
 
-    public StationaryLocation(@NonNull UUID uuid, @NonNull Double latitude, @NonNull Double longitude, @NonNull Long sedentaryBegin, @NonNull Long sedentaryEnd) {
+    public StationaryLocation(@NonNull UUID uuid, @NonNull Location location, @NonNull Long endTime) {
         this.uuid = uuid;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.sedentaryBegin = sedentaryBegin;
-        this.sedentaryEnd = sedentaryEnd;
+        this.latitude = location.getLatitude();
+        this.longitude = location.getLongitude();
+        this.sedentaryBegin = location.getTime();
+        this.sedentaryEnd = endTime;
     }
 }

@@ -20,6 +20,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import edu.temple.contacttracer.database.entity.StationaryLocation;
+import edu.temple.contacttracer.database.entity.UniqueId;
 import edu.temple.contacttracer.support.ApiManager;
 import edu.temple.contacttracer.support.PreferencesManager;
 import edu.temple.contacttracer.support.interfaces.PermissionManager;
@@ -42,7 +44,11 @@ public class TrackingService extends Service {
 
                 if (diffMin >= PreferencesManager.getSedentaryLength(TrackingService.this)) {
                     Log.d("Tracing", "User has been sedentary for the configured period of time.");
-                    api.sendLocation(App.db.uniqueIdDao().getMostRecent(), App.lastLocation, nextLocation.getTime());
+                    UniqueId mostRecentId = App.db.uniqueIdDao().getMostRecent();
+                    App.db.locationDao().insert(new StationaryLocation(
+                            mostRecentId.uuid, App.lastLocation, nextLocation.getTime()
+                    ));
+                    api.sendLocation(mostRecentId, App.lastLocation, nextLocation.getTime());
                 }
             }
             App.lastLocation = nextLocation;
