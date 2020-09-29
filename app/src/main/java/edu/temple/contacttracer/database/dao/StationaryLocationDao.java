@@ -1,4 +1,4 @@
-package edu.temple.contacttracer.database;
+package edu.temple.contacttracer.database.dao;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -7,8 +7,10 @@ import androidx.room.Query;
 
 import java.util.List;
 
+import edu.temple.contacttracer.database.entity.StationaryLocation;
+
 @Dao
-public interface LocationDao {
+public interface StationaryLocationDao {
     @Query("SELECT * FROM stationary_location WHERE stored_at > DATE('now', '-14 day')")
     List<StationaryLocation> getAllOld();
 

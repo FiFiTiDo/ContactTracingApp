@@ -1,4 +1,4 @@
-package edu.temple.contacttracer.database;
+package edu.temple.contacttracer.database.entity;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;

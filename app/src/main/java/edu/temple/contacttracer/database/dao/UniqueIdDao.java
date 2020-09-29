@@ -1,4 +1,4 @@
-package edu.temple.contacttracer.database;
+package edu.temple.contacttracer.database.dao;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -7,6 +7,8 @@ import androidx.room.Query;
 
 import java.util.Date;
 import java.util.List;
+
+import edu.temple.contacttracer.database.entity.UniqueId;
 
 @Dao
 public interface UniqueIdDao {

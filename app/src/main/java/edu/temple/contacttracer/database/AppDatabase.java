@@ -8,6 +8,11 @@ import androidx.room.TypeConverters;
 
 import java.util.Date;
 
+import edu.temple.contacttracer.database.converter.DateConverter;
+import edu.temple.contacttracer.database.converter.UuidConverter;
+import edu.temple.contacttracer.database.dao.StationaryLocationDao;
+import edu.temple.contacttracer.database.dao.UniqueIdDao;
+import edu.temple.contacttracer.database.entity.UniqueId;
 import edu.temple.contacttracer.support.DailyUpdateRunnable;
 import edu.temple.contacttracer.support.DateUtils;
 
@@ -17,7 +22,7 @@ public abstract class AppDatabase extends RoomDatabase {
     private static final String LAST_RUN = "last_run";
 
     public abstract UniqueIdDao uniqueIdDao();
-    public abstract LocationDao locationDao();
+    public abstract StationaryLocationDao locationDao();
 
     public void checkDaily(SharedPreferences prefs) {
         Date lastRun = new Date(prefs.getLong(LAST_RUN, 0));

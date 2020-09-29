@@ -1,4 +1,4 @@
-package edu.temple.contacttracer.database;
+package edu.temple.contacttracer.database.converter;
 
 import androidx.room.TypeConverter;
 

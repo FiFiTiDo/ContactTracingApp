@@ -3,10 +3,10 @@ package edu.temple.contacttracer.support;
 import android.util.Log;
 
 import edu.temple.contacttracer.database.AppDatabase;
-import edu.temple.contacttracer.database.StationaryLocation;
-import edu.temple.contacttracer.database.LocationDao;
-import edu.temple.contacttracer.database.UniqueId;
-import edu.temple.contacttracer.database.UniqueIdDao;
+import edu.temple.contacttracer.database.entity.StationaryLocation;
+import edu.temple.contacttracer.database.dao.StationaryLocationDao;
+import edu.temple.contacttracer.database.entity.UniqueId;
+import edu.temple.contacttracer.database.dao.UniqueIdDao;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class DailyUpdateRunnable implements Runnable {
         uniqueIdDao.deleteAll(oldIds.toArray(new UniqueId[] {}));
         Log.d("DailyTask", "Deleted " + oldIds.size() + " old ids");
 
-        LocationDao locationDao = db.locationDao();
+        StationaryLocationDao locationDao = db.locationDao();
         List<StationaryLocation> oldLocations = locationDao.getAllOld();
         locationDao.deleteAll(oldLocations.toArray(new StationaryLocation[] {}));
         Log.d("DailyTask", "Deleted " + oldLocations.size() + " old locations");

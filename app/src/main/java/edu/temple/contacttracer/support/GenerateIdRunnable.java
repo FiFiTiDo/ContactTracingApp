@@ -3,8 +3,8 @@ package edu.temple.contacttracer.support;
 import android.util.Log;
 
 import edu.temple.contacttracer.database.AppDatabase;
-import edu.temple.contacttracer.database.UniqueId;
-import edu.temple.contacttracer.database.UniqueIdDao;
+import edu.temple.contacttracer.database.entity.UniqueId;
+import edu.temple.contacttracer.database.dao.UniqueIdDao;
 
 public class GenerateIdRunnable implements Runnable {
     private AppDatabase db;
