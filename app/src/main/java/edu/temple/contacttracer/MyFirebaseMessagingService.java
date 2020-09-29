@@ -52,6 +52,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 if (LocationUtils.checkTracingDistance(this, lat, lon)) {
                     ContactEvent event = new ContactEvent(uuid, lat, lon, sedentaryBegin, sedentaryEnd);
                     new Thread(() -> App.db.eventDao().insert(event));
+                    Log.d("Tracing", "New contact event at " + lat + " " + lon);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
