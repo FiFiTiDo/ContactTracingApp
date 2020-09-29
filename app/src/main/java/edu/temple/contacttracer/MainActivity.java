@@ -25,7 +25,6 @@ import edu.temple.contacttracer.support.listeners.MainPageButtonListener;
 import edu.temple.contacttracer.support.listeners.SettingsListener;
 
 public class MainActivity extends AppCompatActivity implements PermissionManager, MainPageButtonListener, SettingsListener {
-    private AppDatabase db = null;
     private TrackingService.TrackingServiceBinder tsb = null;
 
     @Override
@@ -33,9 +32,8 @@ public class MainActivity extends AppCompatActivity implements PermissionManager
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setupFirebase();
-        setupDatabase();
-        db.checkDaily(this.getPreferences(MODE_PRIVATE));
+        MyFirebaseMessagingService.subscribeToTopic();
+        App.db.checkDaily(this.getPreferences(MODE_PRIVATE));
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.mainFrame);
         if (fragment == null) fragment = MainPageFragment.newInstance();
@@ -43,19 +41,6 @@ public class MainActivity extends AppCompatActivity implements PermissionManager
                 .beginTransaction()
                 .replace(R.id.mainFrame, fragment)
                 .commit();
-    }
-
-    // Database management
-    private void setupDatabase() {
-        if (db == null)
-            db = Room.databaseBuilder(this, AppDatabase.class, "contact-tracing").build();
-    }
-
-    // Firebase management
-    private void setupFirebase() {
-        FirebaseMessaging.getInstance().subscribeToTopic("TRACKING").addOnCompleteListener(
-            task -> Log.d("Firebase", "Successfully subscribed to the topic TRACKING")
-        );
     }
 
     // Permission management
@@ -144,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements PermissionManager
     @Override
     public void onGenerateId() {
         new Thread(() -> {
-            new GenerateIdRunnable(db).run();
+            new GenerateIdRunnable(App.db).run();
             runOnUiThread(() -> {
                 Toast.makeText(MainActivity.this, getString(R.string.uuid_generated_toast), Toast.LENGTH_LONG).show();
             });

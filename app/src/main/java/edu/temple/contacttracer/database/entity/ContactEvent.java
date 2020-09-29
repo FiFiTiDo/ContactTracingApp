@@ -10,22 +10,27 @@ import java.util.UUID;
 @Entity(tableName = "contact_event")
 public class ContactEvent {
     @NonNull
-    public UUID targetId;
+    public UUID uuid;
 
     @NonNull
-    public Long latitude;
+    public Double latitude;
 
     @NonNull
-    public Long longitude;
+    public Double longitude;
 
-    @ColumnInfo(name = "created_at")
+    @ColumnInfo(name = "sedentary_begin")
     @NonNull
-    public Date createdAt;
+    public Long sedentaryBegin;
 
-    public ContactEvent(@NonNull UUID targetId, @NonNull Long latitude, @NonNull Long longitude) {
-        this.targetId = targetId;
+    @ColumnInfo(name = "sedentary_end")
+    @NonNull
+    public Long sedentaryEnd;
+
+    public ContactEvent(@NonNull UUID uuid, @NonNull Double latitude, @NonNull Double longitude, @NonNull Long sedentaryBegin, @NonNull Long sedentaryEnd) {
+        this.uuid = uuid;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.createdAt = new Date();
+        this.sedentaryBegin = sedentaryBegin;
+        this.sedentaryEnd = sedentaryEnd;
     }
 }

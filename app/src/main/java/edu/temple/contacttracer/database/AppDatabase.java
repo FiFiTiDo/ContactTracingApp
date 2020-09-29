@@ -1,8 +1,10 @@
 package edu.temple.contacttracer.database;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.room.Database;
+import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
@@ -40,4 +42,15 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     }
 
+    private static AppDatabase instance;
+    public static AppDatabase getInstance(final Context ctx){
+        if(instance == null){
+            instance = Room.databaseBuilder(
+                    ctx.getApplicationContext(),
+                    AppDatabase.class,
+                    "contact-tracing"
+            ).build();
+        }
+        return instance;
+    }
 }
