@@ -44,11 +44,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 Long sedentaryBegin = data.getLong("sedentary_begin");
                 Long sedentaryEnd = data.getLong("sedentary_end");
 
-                if (LocationUtils.checkTracingDistance(this, lat, lon)) {
-                    ContactEvent event = new ContactEvent(uuid, lat, lon, sedentaryBegin, sedentaryEnd);
-                    new Thread(() -> App.db.eventDao().insert(event));
-                    Log.d("Tracing", "New contact event at " + lat + " " + lon);
-                }
+                if (App.db.uniqueIdDao().hasById(uuid)) return; // Self location
+                if (!LocationUtils.checkTracingDistance(this, lat, lon)) return; // Too far
+
+                ContactEvent event = new ContactEvent(uuid, lat, lon, sedentaryBegin, sedentaryEnd);
+                new Thread(() -> App.db.eventDao().insert(event));
+                Log.d("Tracing", "New contact event at " + lat + " " + lon);
             } catch (JSONException e) {
                 e.printStackTrace();
                 return;

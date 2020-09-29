@@ -6,6 +6,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 
 import java.util.List;
+import java.util.UUID;
 
 import edu.temple.contacttracer.database.entity.UniqueId;
 
@@ -19,6 +20,9 @@ public interface UniqueIdDao {
 
     @Query("SELECT * FROM unique_id WHERE generated_at > DATE('now', '-14 day')")
     List<UniqueId> getAllOld();
+
+    @Query("SELECT EXISTS(SELECT * FROM unique_id WHERE uuid = :uuid)")
+    Boolean hasById(UUID uuid);
 
     @Insert
     void insert(UniqueId uniqueId);

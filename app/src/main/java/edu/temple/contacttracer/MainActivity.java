@@ -40,8 +40,6 @@ public class MainActivity extends AppCompatActivity implements PermissionManager
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MyFirebaseMessagingService.subscribeToTopic();
-
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.mainFrame);
         if (fragment == null) fragment = MainPageFragment.newInstance();
         getSupportFragmentManager()

@@ -15,5 +15,7 @@ public class App extends Application {
 
         db = AppDatabase.getInstance(this);
         db.checkDaily(this);
+
+        MyFirebaseMessagingService.subscribeToTopic();
     }
 }
