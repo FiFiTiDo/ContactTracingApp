@@ -19,9 +19,10 @@ import android.widget.Toast;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import edu.temple.contacttracer.database.AppDatabase;
-import edu.temple.contacttracer.listeners.PermissionManager;
-import edu.temple.contacttracer.listeners.MainPageButtonListener;
-import edu.temple.contacttracer.listeners.SettingsListener;
+import edu.temple.contacttracer.support.GenerateIdRunnable;
+import edu.temple.contacttracer.support.listeners.PermissionManager;
+import edu.temple.contacttracer.support.listeners.MainPageButtonListener;
+import edu.temple.contacttracer.support.listeners.SettingsListener;
 
 public class MainActivity extends AppCompatActivity implements PermissionManager, MainPageButtonListener, SettingsListener {
     private AppDatabase db = null;

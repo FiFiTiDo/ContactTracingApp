@@ -1,4 +1,4 @@
-package edu.temple.contacttracer;
+package edu.temple.contacttracer.support;
 
 import android.util.Log;
 

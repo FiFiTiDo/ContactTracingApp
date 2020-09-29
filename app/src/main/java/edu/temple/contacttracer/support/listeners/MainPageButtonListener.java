@@ -1,4 +1,4 @@
-package edu.temple.contacttracer.listeners;
+package edu.temple.contacttracer.support.listeners;
 
 import java.io.Serializable;
 

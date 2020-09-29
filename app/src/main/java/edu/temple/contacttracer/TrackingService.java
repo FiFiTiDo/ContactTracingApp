@@ -20,7 +20,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import edu.temple.contacttracer.listeners.PermissionManager;
+import edu.temple.contacttracer.support.PreferencesManager;
+import edu.temple.contacttracer.support.listeners.PermissionManager;
 
 public class TrackingService extends Service {
     public static final String CHANNEL_ID = "TrackingServiceChannel";

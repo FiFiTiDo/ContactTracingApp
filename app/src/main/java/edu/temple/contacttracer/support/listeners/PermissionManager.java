@@ -1,4 +1,4 @@
-package edu.temple.contacttracer.listeners;
+package edu.temple.contacttracer.support.listeners;
 
 public interface PermissionManager {
     public static final int REQUEST_ID = 1;

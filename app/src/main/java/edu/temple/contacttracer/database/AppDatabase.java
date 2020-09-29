@@ -1,17 +1,15 @@
 package edu.temple.contacttracer.database;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 import java.util.Date;
 
-import edu.temple.contacttracer.DailyUpdateRunnable;
-import edu.temple.contacttracer.DateUtils;
+import edu.temple.contacttracer.support.DailyUpdateRunnable;
+import edu.temple.contacttracer.support.DateUtils;
 
 @Database(entities = {UniqueId.class}, version = 1)
 @TypeConverters({ DateConverter.class, UuidConverter.class })

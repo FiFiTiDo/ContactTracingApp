@@ -10,7 +10,7 @@ import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-import edu.temple.contacttracer.listeners.SettingsListener;
+import edu.temple.contacttracer.support.listeners.SettingsListener;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
     private SettingsListener listener;

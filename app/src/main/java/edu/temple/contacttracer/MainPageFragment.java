@@ -14,7 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import edu.temple.contacttracer.listeners.MainPageButtonListener;
+import edu.temple.contacttracer.support.listeners.MainPageButtonListener;
 
 /**
  * A simple {@link Fragment} subclass.
