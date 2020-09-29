@@ -20,16 +20,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import edu.temple.contacttracer.database.dao.UniqueIdDao;
+import edu.temple.contacttracer.database.entity.UniqueId;
+import edu.temple.contacttracer.support.ApiManager;
 import edu.temple.contacttracer.support.PreferencesManager;
 import edu.temple.contacttracer.support.listeners.PermissionManager;
 
 public class TrackingService extends Service {
     public static final String CHANNEL_ID = "TrackingServiceChannel";
     private LocationManager loc;
+    private ApiManager api;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         loc = getSystemService(LocationManager.class);
+        api = new ApiManager(this);
         createNotificationChannel();
         Intent notifIntent = new Intent(this, MainActivity.class);
         PendingIntent pi = PendingIntent.getActivity(this, 0, notifIntent, 0);
@@ -108,6 +113,12 @@ public class TrackingService extends Service {
 
                 if (diffMin >= PreferencesManager.getSedentaryLength(TrackingService.this)) {
                     Log.d("Tracing", "User has been sedentary for the configured period of time.");
+                    new Thread(() -> {
+                        UniqueIdDao dao = App.db.uniqueIdDao();
+                        UniqueId id = dao.getToday();
+
+                        api.sendLocation(id, App.lastLocation, nextLocation.getTime());
+                    }).start();
                 }
             }
             App.lastLocation = nextLocation;
