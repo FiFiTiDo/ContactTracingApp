@@ -110,6 +110,7 @@ public class TrackingService extends Service {
                 }
             }
             lastLocation = nextLocation;
+            App.lastLocation = nextLocation;
         }
 
         @Override

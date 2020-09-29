@@ -2,6 +2,7 @@ package edu.temple.contacttracer;
 
 import android.app.Service;
 import android.content.Intent;
+import android.location.Location;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 import edu.temple.contacttracer.database.dao.ContactEventDao;
 import edu.temple.contacttracer.database.entity.ContactEvent;
+import edu.temple.contacttracer.support.LocationUtils;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static final String TRACKING_TOPIC = "TRACKING";
@@ -46,9 +48,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 Double lon = data.getDouble("longitude");
                 Long sedentaryBegin = data.getLong("sedentary_begin");
                 Long sedentaryEnd = data.getLong("sedentary_end");
-                // TODO: Check location
-                ContactEvent event = new ContactEvent(uuid, lat, lon, sedentaryBegin, sedentaryEnd);
-                new Thread(() -> App.db.eventDao().insert(event));
+
+                if (LocationUtils.checkTracingDistance(this, lat, lon)) {
+                    ContactEvent event = new ContactEvent(uuid, lat, lon, sedentaryBegin, sedentaryEnd);
+                    new Thread(() -> App.db.eventDao().insert(event));
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
                 return;
