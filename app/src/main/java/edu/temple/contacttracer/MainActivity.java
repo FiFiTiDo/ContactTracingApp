@@ -14,11 +14,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import edu.temple.contacttracer.support.interfaces.GlobalStateManager;
 import edu.temple.contacttracer.support.interfaces.MainPageButtonListener;
 import edu.temple.contacttracer.support.interfaces.PermissionManager;
 import edu.temple.contacttracer.support.interfaces.SettingsListener;
 
 public class MainActivity extends AppCompatActivity implements PermissionManager, MainPageButtonListener, SettingsListener {
+    private GlobalStateManager global;
     private TrackingService.TrackingServiceBinder tsb = null;
     // Tracing service management
     private final ServiceConnection tracingServiceConn = new ServiceConnection() {
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements PermissionManager
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        global = (GlobalStateManager) getApplicationContext();
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.mainFrame);
         if (fragment == null) fragment = MainPageFragment.newInstance();
         getSupportFragmentManager()
@@ -119,11 +122,11 @@ public class MainActivity extends AppCompatActivity implements PermissionManager
     @Override
     public void onGenerateId() {
         new Thread(() -> {
-            App.db.generateId(true);
+            global.getDb().generateId(true);
             runOnUiThread(() -> Toast.makeText(
-                MainActivity.this,
-                getString(R.string.uuid_generated_toast),
-                Toast.LENGTH_LONG
+                    MainActivity.this,
+                    getString(R.string.uuid_generated_toast),
+                    Toast.LENGTH_LONG
             ).show());
         }).start();
     }

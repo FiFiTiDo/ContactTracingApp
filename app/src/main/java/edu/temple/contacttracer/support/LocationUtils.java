@@ -9,16 +9,17 @@ import android.location.LocationManager;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
-import edu.temple.contacttracer.App;
+import edu.temple.contacttracer.support.interfaces.GlobalStateManager;
 
 public class LocationUtils {
     @Nullable
     public static Location getCurrentLocation(Context ctx) {
         LocationManager manager = ctx.getSystemService(LocationManager.class);
+        GlobalStateManager globals = (GlobalStateManager) ctx.getApplicationContext();
         if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             return manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
-        return App.lastLocation;
+        return globals.getLastLocation();
     }
 
     public static boolean checkTracingDistance(Context ctx, Double lat, Double lon) {

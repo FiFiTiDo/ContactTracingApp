@@ -1,7 +1,6 @@
 package edu.temple.contacttracer.support;
 
 import android.content.Context;
-import android.location.Location;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -12,7 +11,7 @@ import com.android.volley.toolbox.Volley;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.temple.contacttracer.database.entity.UniqueId;
+import edu.temple.contacttracer.database.entity.SedentaryLocation;
 
 public class ApiManager {
     private static final String SERVER_URL = "https://kamorris.com/lab/ct_tracking.php";
@@ -22,7 +21,7 @@ public class ApiManager {
         this.queue = Volley.newRequestQueue(ctx);
     }
 
-    public void sendLocation(UniqueId currentId, Location loc, long endTime) {
+    public void sendLocation(SedentaryLocation loc) {
         StringRequest req = new StringRequest(Request.Method.POST, SERVER_URL, response -> {
             // Success
             Log.d("API", "Successfully sent location to remote server.");
@@ -34,11 +33,11 @@ public class ApiManager {
             @Override
             protected Map<String, String> getParams() {
                 return new HashMap<String, String>() {{
-                    put("uuid", currentId.uuid.toString());
-                    put("latitude", String.valueOf(loc.getLatitude()));
-                    put("longitude", String.valueOf(loc.getLongitude()));
-                    put("sedentary_begin", String.valueOf(loc.getTime()));
-                    put("sedentary_end", String.valueOf(endTime));
+                    put("uuid", loc.uuid.toString());
+                    put("latitude", String.valueOf(loc.latitude));
+                    put("longitude", String.valueOf(loc.longitude));
+                    put("sedentary_begin", String.valueOf(loc.sedentaryBegin));
+                    put("sedentary_end", String.valueOf(loc.sedentaryEnd));
                 }};
             }
 

@@ -16,14 +16,14 @@ import java.util.List;
 import edu.temple.contacttracer.database.converter.DateConverter;
 import edu.temple.contacttracer.database.converter.UuidConverter;
 import edu.temple.contacttracer.database.dao.ContactEventDao;
-import edu.temple.contacttracer.database.dao.StationaryLocationDao;
+import edu.temple.contacttracer.database.dao.SedentaryLocationDao;
 import edu.temple.contacttracer.database.dao.UniqueIdDao;
 import edu.temple.contacttracer.database.entity.ContactEvent;
-import edu.temple.contacttracer.database.entity.StationaryLocation;
+import edu.temple.contacttracer.database.entity.SedentaryLocation;
 import edu.temple.contacttracer.database.entity.UniqueId;
 import edu.temple.contacttracer.support.DateUtils;
 
-@Database(entities = {UniqueId.class, StationaryLocation.class, ContactEvent.class}, version = 1)
+@Database(entities = {UniqueId.class, SedentaryLocation.class, ContactEvent.class}, version = 1)
 @TypeConverters({DateConverter.class, UuidConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     private static final String LAST_RUN = "last_run";
@@ -42,7 +42,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract UniqueIdDao uniqueIdDao();
 
-    public abstract StationaryLocationDao locationDao();
+    public abstract SedentaryLocationDao locationDao();
 
     public abstract ContactEventDao eventDao();
 
@@ -74,9 +74,9 @@ public abstract class AppDatabase extends RoomDatabase {
                 uniqueIdDao.deleteAll(oldIds.toArray(new UniqueId[]{}));
                 Log.d("DailyTask", "Deleted " + oldIds.size() + " old ids");
 
-                StationaryLocationDao locationDao = locationDao();
-                List<StationaryLocation> oldLocations = locationDao.getAllOld();
-                locationDao.deleteAll(oldLocations.toArray(new StationaryLocation[]{}));
+                SedentaryLocationDao locationDao = locationDao();
+                List<SedentaryLocation> oldLocations = locationDao.getAllOld();
+                locationDao.deleteAll(oldLocations.toArray(new SedentaryLocation[]{}));
                 Log.d("DailyTask", "Deleted " + oldLocations.size() + " old locations");
 
                 ContactEventDao eventDao = eventDao();

@@ -9,8 +9,10 @@ import androidx.room.PrimaryKey;
 
 import java.util.UUID;
 
-@Entity(tableName = "stationary_location")
-public class StationaryLocation {
+import edu.temple.contacttracer.support.interfaces.GlobalStateManager;
+
+@Entity(tableName = "sedentary_location")
+public class SedentaryLocation {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
@@ -31,7 +33,7 @@ public class StationaryLocation {
     @NonNull
     public Long sedentaryEnd;
 
-    public StationaryLocation(int id, @NonNull UUID uuid, @NonNull Double latitude, @NonNull Double longitude, @NonNull Long sedentaryBegin, @NonNull Long sedentaryEnd) {
+    public SedentaryLocation(int id, @NonNull UUID uuid, @NonNull Double latitude, @NonNull Double longitude, @NonNull Long sedentaryBegin, @NonNull Long sedentaryEnd) {
         this.id = id;
         this.uuid = uuid;
         this.latitude = latitude;
@@ -40,11 +42,17 @@ public class StationaryLocation {
         this.sedentaryEnd = sedentaryEnd;
     }
 
-    public StationaryLocation(@NonNull UUID uuid, @NonNull Location location, @NonNull Long endTime) {
+    public SedentaryLocation(@NonNull UUID uuid, @NonNull Location location, @NonNull Long endTime) {
         this.uuid = uuid;
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
         this.sedentaryBegin = location.getTime();
         this.sedentaryEnd = endTime;
+    }
+
+    public static SedentaryLocation makeFromGlobals(GlobalStateManager global, Long endTime) {
+        UniqueId mostRecentId = global.getDb().uniqueIdDao().getMostRecent();
+        Location lastLocation = global.getLastLocation();
+        return new SedentaryLocation(mostRecentId.uuid, lastLocation, endTime);
     }
 }

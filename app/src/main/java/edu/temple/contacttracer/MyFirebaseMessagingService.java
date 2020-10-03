@@ -1,5 +1,6 @@
 package edu.temple.contacttracer;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -9,13 +10,13 @@ import com.google.firebase.messaging.RemoteMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.UUID;
-
 import edu.temple.contacttracer.database.entity.ContactEvent;
-import edu.temple.contacttracer.support.LocationUtils;
+import edu.temple.contacttracer.support.interfaces.GlobalStateManager;
 
+@SuppressLint("MissingFirebaseInstanceTokenRefresh")
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static final String TRACKING_TOPIC = "TRACKING";
+    private GlobalStateManager global;
 
     public MyFirebaseMessagingService() {
     }
@@ -27,29 +28,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     @Override
-    public void onNewToken(String s) {
-        super.onNewToken(s);
+    public void onCreate() {
+        super.onCreate();
+
+        global = (GlobalStateManager) getApplicationContext();
     }
 
     @Override
     public void onMessageReceived(RemoteMessage msg) {
         if (msg.getFrom() != null && msg.getFrom().equals(TRACKING_TOPIC)) {
             String payload = msg.getData().get("payload");
-            if (payload == null) return;
+            if (payload == null) return; // No payload value
             try {
-                JSONObject data = new JSONObject(payload);
-                UUID uuid = UUID.fromString(data.getString("uuid"));
-                Double lat = data.getDouble("latitude");
-                Double lon = data.getDouble("longitude");
-                Long sedentaryBegin = data.getLong("sedentary_begin");
-                Long sedentaryEnd = data.getLong("sedentary_end");
-
-                if (App.db.uniqueIdDao().hasById(uuid)) return; // Self location
-                if (!LocationUtils.checkTracingDistance(this, lat, lon)) return; // Too far
-
-                ContactEvent event = new ContactEvent(uuid, lat, lon, sedentaryBegin, sedentaryEnd);
-                new Thread(() -> App.db.eventDao().insert(event));
-                Log.d("Tracing", "New contact event at " + lat + " " + lon);
+                ContactEvent event = ContactEvent.fromPayload(new JSONObject(payload));
+                if (!event.validate(this)) return; // Invalid event
+                new Thread(() -> global.getDb().eventDao().insert(event));
+                Log.d("Tracing", event.toString());
             } catch (JSONException e) {
                 e.printStackTrace();
                 return;

@@ -11,14 +11,9 @@ import androidx.preference.Preference;
 import edu.temple.contacttracer.R;
 
 public class EditIntegerPreference extends EditTextPreference {
-    public interface OnNumberChangedListener {
-        void onNumberChanged(Preference preference, int newValue);
-    }
-
     private OnNumberChangedListener onNumberChangedListener;
     private int minValue;
     private int maxValue;
-
     public EditIntegerPreference(Context ctx, AttributeSet attrs) {
         super(ctx, attrs);
 
@@ -46,5 +41,9 @@ public class EditIntegerPreference extends EditTextPreference {
 
     public void setOnNumberChangedListener(OnNumberChangedListener listener) {
         onNumberChangedListener = listener;
+    }
+
+    public interface OnNumberChangedListener {
+        void onNumberChanged(Preference preference, int newValue);
     }
 }
