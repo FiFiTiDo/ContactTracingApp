@@ -21,7 +21,7 @@ import androidx.core.app.NotificationCompat;
 
 import edu.temple.contacttracer.database.entity.SedentaryLocation;
 import edu.temple.contacttracer.support.ApiManager;
-import edu.temple.contacttracer.support.PreferencesManager;
+import edu.temple.contacttracer.support.PreferenceUtils;
 import edu.temple.contacttracer.support.interfaces.GlobalStateManager;
 import edu.temple.contacttracer.support.interfaces.PermissionManager;
 
@@ -44,7 +44,7 @@ public class TrackingService extends Service {
                     Log.d("Tracing", "User has been sedentary for " + diffMin + " minutes.");
 
                 // Check actual sedentary time
-                if (diffMin >= PreferencesManager.getSedentaryLength(TrackingService.this)) {
+                if (diffMin >= PreferenceUtils.getSedentaryLength(TrackingService.this)) {
                     Log.d("Tracing", "User has been sedentary for the configured period of time.");
                     SedentaryLocation loc = SedentaryLocation.makeFromGlobals(global, nextLocation.getTime());
                     global.getDb().locationDao().insert(loc);
@@ -75,6 +75,9 @@ public class TrackingService extends Service {
         return START_NOT_STICKY;
     }
 
+    /**
+     * Create the notification channel used by the foreground service notification
+     */
     private void createNotificationChannel() {
         NotificationChannel serviceChannel = new NotificationChannel(
                 CHANNEL_ID,
@@ -85,6 +88,11 @@ public class TrackingService extends Service {
         manager.createNotificationChannel(serviceChannel);
     }
 
+    /**
+     * Create the notification for the foreground service
+     *
+     * @return The notification
+     */
     public Notification createNotification() {
         Intent notifIntent = new Intent(this, MainActivity.class);
         PendingIntent pi = PendingIntent.getActivity(this, 0, notifIntent, 0);
@@ -121,7 +129,7 @@ public class TrackingService extends Service {
     }
 
     public void startTracking() {
-        startTracking(PreferencesManager.getTrackingDistance(this));
+        startTracking(PreferenceUtils.getTrackingDistance(this));
     }
 
     public void stopTracking() {

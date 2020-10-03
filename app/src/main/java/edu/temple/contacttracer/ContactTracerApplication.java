@@ -6,9 +6,9 @@ import android.location.Location;
 import edu.temple.contacttracer.database.AppDatabase;
 import edu.temple.contacttracer.support.interfaces.GlobalStateManager;
 
-public class App extends Application implements GlobalStateManager {
-    public Location lastLocation = null;
-    public AppDatabase db = null;
+public class ContactTracerApplication extends Application implements GlobalStateManager {
+    private Location lastLocation = null;
+    private AppDatabase db = null;
 
     @Override
     public AppDatabase getDb() {
