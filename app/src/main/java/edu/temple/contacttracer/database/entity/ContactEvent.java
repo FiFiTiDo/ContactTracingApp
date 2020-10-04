@@ -91,7 +91,7 @@ public class ContactEvent {
         int maxDistance = PreferenceUtils.getTrackingDistance(ctx);
         Location currentLoc = global.getLastLocation();
         Location eventLoc = getLocation();
-
+        if (currentLoc == null) return false; // Location never retrieved
         return currentLoc.distanceTo(eventLoc) <= maxDistance; // Check if too far
 
     }

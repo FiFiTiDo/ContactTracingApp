@@ -24,11 +24,15 @@ public class ApiManager {
     public void sendLocation(SedentaryLocation loc) {
         StringRequest req = new StringRequest(Request.Method.POST, SERVER_URL, response -> {
             // Success
-            Log.d("API", "Successfully sent location to remote server.");
+            if (response.equalsIgnoreCase("ok"))
+                Log.d("API", "Successfully sent location to remote server.");
+            else
+                Log.d("API", "Failed to send location to remote server.");
+            Log.d("API Response", response);
         }, error -> {
             // Failure
             Log.d("API", "Failed to send location to remote server.");
-            Log.e("API", error.toString());
+            Log.e("API ERROR", error.toString());
         }) {
             @Override
             protected Map<String, String> getParams() {
