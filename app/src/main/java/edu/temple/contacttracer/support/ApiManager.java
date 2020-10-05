@@ -22,9 +22,11 @@ public class ApiManager {
     }
 
     public void sendLocation(SedentaryLocation loc) {
+        Log.d("API", "Sending location to the remote server");
+        Log.d("API Body", loc.toString());
         StringRequest req = new StringRequest(Request.Method.POST, SERVER_URL, response -> {
             // Success
-            if (response.equalsIgnoreCase("ok"))
+            if (response.contains("OK"))
                 Log.d("API", "Successfully sent location to remote server.");
             else
                 Log.d("API", "Failed to send location to remote server.");

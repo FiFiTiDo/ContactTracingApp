@@ -53,6 +53,7 @@ public class SedentaryLocation {
     public static SedentaryLocation makeFromGlobals(GlobalStateManager global, Long endTime) {
         UniqueId mostRecentId = global.getDb().uniqueIdDao().getMostRecent();
         Location lastLocation = global.getLastLocation();
+        if (lastLocation == null) throw new RuntimeException("Unable to retrieve last known location");
         return new SedentaryLocation(mostRecentId.uuid, lastLocation, endTime);
     }
 }

@@ -2,6 +2,7 @@ package edu.temple.contacttracer.database.entity;
 
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -86,12 +87,19 @@ public class ContactEvent {
     public boolean validate(Context ctx) {
         GlobalStateManager global = (GlobalStateManager) ctx.getApplicationContext();
 
-        if (global.getDb().uniqueIdDao().hasById(uuid)) return false; // Check if self
+        if (global.getDb().uniqueIdDao().hasById(uuid)) {
+            Log.d("Test", "Self contact event");
+            return false; // Check if self
+        }
 
         int maxDistance = PreferenceUtils.getTrackingDistance(ctx);
         Location currentLoc = global.getLastLocation();
         Location eventLoc = getLocation();
-        if (currentLoc == null) return false; // Location never retrieved
+        if (currentLoc == null) {
+            Log.d("Test", "No current location");
+            return false; // Location never retrieved
+        }
+        Log.d("Test", "Distance to event: " + currentLoc.distanceTo(eventLoc));
         return currentLoc.distanceTo(eventLoc) <= maxDistance; // Check if too far
 
     }

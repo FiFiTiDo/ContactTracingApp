@@ -31,9 +31,11 @@ public class TrackingService extends Service {
     private LocationManager loc;
     private ApiManager api;
     private GlobalStateManager global;
+
     private final LocationListener listener = new LocationListener() {
         @Override
         public void onLocationChanged(@NonNull Location nextLocation) {
+            Log.d("Test", "Device's location has changed");
             if (global.hasLastLocation()) {
                 // Calculate minutes user has been sedentary
                 Long last = global.getLastLocation().getTime();
@@ -46,9 +48,11 @@ public class TrackingService extends Service {
                 // Check actual sedentary time
                 if (diffMin >= PreferenceUtils.getSedentaryLength(TrackingService.this)) {
                     Log.d("Tracing", "User has been sedentary for the configured period of time.");
-                    SedentaryLocation loc = SedentaryLocation.makeFromGlobals(global, nextLocation.getTime());
-                    global.getDb().locationDao().insert(loc);
-                    api.sendLocation(loc);
+                    new Thread(() -> {
+                        SedentaryLocation loc = SedentaryLocation.makeFromGlobals(global, nextLocation.getTime());
+                        global.getDb().locationDao().insert(loc);
+                        api.sendLocation(loc);
+                    }).start();
                 }
             }
             global.setLastLocation(nextLocation);
@@ -56,6 +60,16 @@ public class TrackingService extends Service {
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(@NonNull String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(@NonNull String provider) {
 
         }
     };
@@ -125,7 +139,13 @@ public class TrackingService extends Service {
             return;
         }
 
+        Location lastKnownLocation = loc.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        global.setLastLocation(lastKnownLocation);
         loc.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, distance, listener);
+        Log.d("Tracing", "Now tracking the device's location");
+        Log.d("Test", "Device's last known location: " + (lastKnownLocation != null ? lastKnownLocation.toString() : null));
+        if (lastKnownLocation == null)
+            Log.e("Tracing", "No last known location, try setting a gps spoofer?");
     }
 
     public void startTracking() {

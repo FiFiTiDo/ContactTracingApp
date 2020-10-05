@@ -16,7 +16,7 @@ import edu.temple.contacttracer.R;
  * duplication as it is used for both time and distance.
  */
 public class EditIntegerPreference extends EditTextPreference {
-    private OnNumberChangedListener onNumberChangedListener;
+    private OnNumberChangedListener onNumberChangedListener = (Preference pref, int number) -> {};
     private int minValue;
     private int maxValue;
 
@@ -43,7 +43,7 @@ public class EditIntegerPreference extends EditTextPreference {
                 return false;
             }
 
-            // Alert listener of changed number value
+            // Alert listener of changed number value if listener exists
             onNumberChangedListener.onNumberChanged(preference, intVal);
             return true;
         });
