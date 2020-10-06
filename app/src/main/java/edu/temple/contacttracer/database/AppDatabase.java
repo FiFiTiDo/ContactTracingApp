@@ -65,6 +65,7 @@ public abstract class AppDatabase extends RoomDatabase {
         Date today = DateUtils.today();
 
         if (lastRun.before(today)) {
+            Log.d("DailyTask", "Running daily task...");
             new Thread(() -> {
                 generateId();
 
@@ -88,6 +89,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putLong(LAST_RUN, DateUtils.now());
                 editor.apply();
+                Log.d("DailyTask", "Daily task complete.");
             }).start();
         }
     }

@@ -51,6 +51,18 @@ public class MainActivity extends AppCompatActivity implements PermissionManager
                 .commit();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        global.setInForeground(true);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        global.setInForeground(false);
+    }
+
     // Permission management
     @Override
     public boolean hasPermission() {

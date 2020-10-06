@@ -12,4 +12,8 @@ public interface GlobalStateManager {
     void setLastLocation(Location location);
 
     boolean hasLastLocation();
+
+    boolean isInForeground();
+
+    void setInForeground(boolean inForeground);
 }

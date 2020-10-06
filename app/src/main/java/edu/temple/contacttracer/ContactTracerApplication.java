@@ -9,14 +9,15 @@ import edu.temple.contacttracer.support.interfaces.GlobalStateManager;
 public class ContactTracerApplication extends Application implements GlobalStateManager {
     private Location lastLocation = null;
     private AppDatabase db = null;
+    private boolean inForeground = false;
 
     @Override
     public AppDatabase getDb() {
         if (db == null) {
             db = AppDatabase.getInstance(this);
-            db.checkDaily(this);
         }
 
+        db.checkDaily(this);
         return db;
     }
 
@@ -36,11 +37,18 @@ public class ContactTracerApplication extends Application implements GlobalState
     }
 
     @Override
+    public boolean isInForeground() {
+        return inForeground;
+    }
+
+    @Override
+    public void setInForeground(boolean inForeground) {
+        this.inForeground = inForeground;
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
-
-        db = AppDatabase.getInstance(this);
-        db.checkDaily(this);
 
         MyFirebaseMessagingService.subscribeToTopic();
     }
