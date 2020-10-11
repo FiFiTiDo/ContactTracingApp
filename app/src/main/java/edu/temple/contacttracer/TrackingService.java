@@ -113,8 +113,8 @@ public class TrackingService extends Service {
 
         return new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notification_icon)
-                .setContentTitle("Contact Tracer")
-                .setContentText("Tracking your location for contact tracing purposes.")
+                .setContentTitle(getString(R.string.service_title))
+                .setContentText(getString(R.string.service_content))
                 .setContentIntent(pi)
                 .build();
     }

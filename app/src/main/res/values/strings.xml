@@ -2,6 +2,12 @@
     <string name="app_name">Contact Tracing</string>
     <string name="welcome_message">Welcome to the contact tracing app!</string>
 
+    <!-- Notifications -->
+    <string name="service_title">Contact Tracer</string>
+    <string name="service_content">Tracking your location for contact tracing purposes.</string>
+    <string name="trace_alert_title">Exposure Alert</string>
+    <string name="trace_alert_content">You have been in contact with someone in the last 14 days who has recently tested positive. Click on the notification for more information.</string>
+
     <!-- Permission dialog -->
     <string name="perm_rationale_title">Oops!</string>
     <string name="perm_rational_text">

@@ -12,13 +12,14 @@ import androidx.room.PrimaryKey;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import edu.temple.contacttracer.support.PreferenceUtils;
 import edu.temple.contacttracer.support.interfaces.GlobalStateManager;
 
 @Entity(tableName = "contact_event")
-public class ContactEvent {
+public class ContactEvent implements Serializable {
     @PrimaryKey(autoGenerate = true)
     public int id;
 

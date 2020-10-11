@@ -50,6 +50,6 @@ public class ContactTracerApplication extends Application implements GlobalState
     public void onCreate() {
         super.onCreate();
 
-        MyFirebaseMessagingService.subscribeToTopic();
+        MyFirebaseMessagingService.subscribeToTopics();
     }
 }
