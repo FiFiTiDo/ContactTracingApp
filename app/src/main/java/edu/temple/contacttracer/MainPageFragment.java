@@ -82,7 +82,7 @@ public class MainPageFragment extends Fragment {
                 report.set(Calendar.MONTH, monthOfYear);
                 report.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 Log.d("Test", "Date selected: " + report.getTime().toString());
-                global.getApiManager().sendReport(global.getDb().locationDao().getRecent(), report.getTime());
+                new Thread(() ->  global.getApiManager().sendReport(global.getDb().locationDao().getRecent(), report.getTime())).start();
             }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
 
             dialog.getDatePicker().setMinDate(fourteenDays.getTimeInMillis());

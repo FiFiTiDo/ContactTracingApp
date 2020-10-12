@@ -105,33 +105,35 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void onTracing(String payload) {
-        try {
-            // JSON Manipulation
-            JSONObject json = new JSONObject(payload);
-            JSONArray jsonUuid = json.getJSONArray("uuids");
-            List<UUID> uuids = new ArrayList<>();
-            Date timestamp = new Date(json.getLong("date"));
+        new Thread(() -> {
+            try {
+                // JSON Manipulation
+                JSONObject json = new JSONObject(payload);
+                JSONArray jsonUuid = json.getJSONArray("uuids");
+                Date timestamp = new Date(json.getLong("date"));
 
-            // Get own uuids
-            SedentaryLocationDao locationDao = global.getDb().locationDao();
-            List<UUID> myUuids = locationDao.getRecent().stream().map(location -> location.uuid).collect(Collectors.toList());
+                // Get own uuids
+                SedentaryLocationDao locationDao = global.getDb().locationDao();
+                List<UUID> myUuids = locationDao.getRecent().stream().map(location -> location.uuid).collect(Collectors.toList());
 
-            // Get contact events
-            ContactEventDao eventDao = global.getDb().eventDao();
-            List<ContactEvent> recentEvents = eventDao.getRecent();
+                // Get contact events
+                ContactEventDao eventDao = global.getDb().eventDao();
+                List<ContactEvent> recentEvents = eventDao.getRecent();
 
-            for (int i = 0; i < jsonUuid.length(); i++) {
-                UUID uuid = UUID.fromString(jsonUuid.getString(i));
+                for (int i = 0; i < jsonUuid.length(); i++) {
+                    UUID uuid = UUID.fromString(jsonUuid.getString(i));
 
-                for (UUID otherUuid : uuids)
-                    if (uuid == otherUuid) return; // Is own UUID
+                    for (UUID otherUuid : myUuids)
+                        if (uuid == otherUuid) return; // Is own UUID
 
-                for (ContactEvent event : recentEvents)
-                    if (uuid == event.uuid) onExposure(timestamp, event); // Was in contact with user
+                    for (ContactEvent event : recentEvents)
+                        if (uuid == event.uuid)
+                            onExposure(timestamp, event); // Was in contact with user
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        }).start();
     }
 
     private void createNotificationChannel() {
