@@ -56,7 +56,14 @@ public class ContactEvent implements Serializable {
      * @throws JSONException Throws when the payload's structure is malformed
      */
     public static ContactEvent fromPayload(JSONObject payload) throws JSONException {
-        UUID uuid = UUID.fromString(payload.getString("uuid"));
+        UUID uuid;
+        try {
+            uuid = UUID.fromString(payload.getString("uuid"));
+        } catch (IllegalArgumentException ex) {
+            // Someone sent an invalid id to the server...
+            Log.d("Test", "Invalid payload: " + payload.toString());
+            return null;
+        }
         Double latitude = payload.getDouble("latitude");
         Double longitude = payload.getDouble("longitude");
         Long sedentaryBegin = payload.getLong("sedentary_begin");

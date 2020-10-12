@@ -93,6 +93,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void onTracking(String payload) {
         try {
             ContactEvent event = ContactEvent.fromPayload(new JSONObject(payload));
+            if (event == null) return;
             if (!event.validate(this)) {
                 Log.d("Test", "Invalid contact event");
                 return; // Invalid event
