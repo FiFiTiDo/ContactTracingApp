@@ -47,6 +47,11 @@ public class ContactTracerApplication extends Application implements GlobalState
     }
 
     @Override
+    public boolean isDebugMode() {
+        return false;
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
 

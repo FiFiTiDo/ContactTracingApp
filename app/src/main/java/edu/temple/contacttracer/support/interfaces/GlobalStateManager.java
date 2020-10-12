@@ -16,4 +16,6 @@ public interface GlobalStateManager {
     boolean isInForeground();
 
     void setInForeground(boolean inForeground);
+
+    boolean isDebugMode();
 }

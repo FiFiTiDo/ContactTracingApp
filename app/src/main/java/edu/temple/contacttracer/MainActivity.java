@@ -1,8 +1,11 @@
 package edu.temple.contacttracer;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -13,7 +16,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import java.util.UUID;
+
+import edu.temple.contacttracer.database.entity.ContactEvent;
 import edu.temple.contacttracer.support.interfaces.GlobalStateManager;
 import edu.temple.contacttracer.support.interfaces.MainPageButtonListener;
 import edu.temple.contacttracer.support.interfaces.PermissionManager;
@@ -37,23 +44,52 @@ public class MainActivity extends AppCompatActivity implements PermissionManager
         }
     };
 
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ContactEvent event = (ContactEvent) intent.getSerializableExtra(MyFirebaseMessagingService.NEW_TRACE_EVENT);
+            showTraceFragment(event);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         global = (GlobalStateManager) getApplicationContext();
+
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.mainFrame);
         if (fragment == null) fragment = MainPageFragment.newInstance();
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.mainFrame, fragment)
                 .commit();
+
+        Intent intent = getIntent();
+        if (intent.hasExtra(MyFirebaseMessagingService.NEW_TRACE_EVENT)) {
+            ContactEvent event = (ContactEvent) intent.getSerializableExtra(MyFirebaseMessagingService.NEW_TRACE_EVENT);
+            showTraceFragment(event);
+        }
+
+        if (global.isDebugMode()) {
+            ContactEvent testEvent = new ContactEvent(UUID.randomUUID(), 39.9814667, -75.1551641, 1602450416930L, 1602458416930L);
+            showTraceFragment(testEvent);
+        }
+    }
+
+    private void showTraceFragment(ContactEvent event) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.mainFrame, TraceFragment.newInstance(event))
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        IntentFilter filter = new IntentFilter(MyFirebaseMessagingService.NEW_TRACE_FILTER);
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, filter);
         global.setInForeground(true);
     }
 
@@ -61,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements PermissionManager
     protected void onPause() {
         super.onPause();
         global.setInForeground(false);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
     }
 
     // Permission management

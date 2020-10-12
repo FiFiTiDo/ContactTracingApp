@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">Contact Tracing</string>
     <string name="welcome_message">Welcome to the contact tracing app!</string>
+    <string name="trace_title">Virus Exposure Alert</string>
+    <string name="trace_message">
+        You may have been exposed to the virus as someone you have been in contact with in the last
+        14 days has recently tested positive. Below you can see when and where you were in contact
+        with this person.
+    </string>
 
     <!-- Notifications -->
     <string name="service_title">Contact Tracer</string>
