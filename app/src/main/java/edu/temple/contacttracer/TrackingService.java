@@ -29,7 +29,6 @@ public class TrackingService extends Service {
     public static final String CHANNEL_ID = "TrackingServiceChannel";
     public PermissionManager permissionManager;
     private LocationManager loc;
-    private ApiManager api;
     private GlobalStateManager global;
 
     private final LocationListener listener = new LocationListener() {
@@ -51,7 +50,7 @@ public class TrackingService extends Service {
                     new Thread(() -> {
                         SedentaryLocation loc = SedentaryLocation.makeFromGlobals(global, nextLocation.getTime());
                         global.getDb().locationDao().insert(loc);
-                        api.sendLocation(loc);
+                        global.getApiManager().sendLocation(loc);
                     }).start();
                 }
             }
@@ -78,7 +77,6 @@ public class TrackingService extends Service {
     public void onCreate() {
         global = (GlobalStateManager) getApplicationContext();
         loc = getSystemService(LocationManager.class);
-        api = new ApiManager(this);
     }
 
     @Override
