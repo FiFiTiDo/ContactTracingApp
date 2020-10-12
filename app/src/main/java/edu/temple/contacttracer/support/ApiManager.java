@@ -8,7 +8,11 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.temple.contacttracer.database.entity.SedentaryLocation;
@@ -44,6 +48,41 @@ public class ApiManager {
                     put("longitude", String.valueOf(loc.longitude));
                     put("sedentary_begin", String.valueOf(loc.sedentaryBegin));
                     put("sedentary_end", String.valueOf(loc.sedentaryEnd));
+                }};
+            }
+
+            @Override
+            public Map<String, String> getHeaders() {
+                return new HashMap<String, String>() {{
+                    put("Content-Type", "application/x-www-form-urlencoded");
+                }};
+            }
+        };
+        queue.add(req);
+    }
+
+    public void sendReport(List<SedentaryLocation> locations, Date testDate) {
+        Log.d("API", "Sending positive report to the remote server");
+        StringRequest req = new StringRequest(Request.Method.POST, SERVER_URL, response -> {
+            // Success
+            if (response.contains("OK"))
+                Log.d("API", "Successfully sent report to remote server.");
+            else
+                Log.d("API", "Failed to send report to remote server.");
+            Log.d("API Response", response);
+        }, error -> {
+            // Failure
+            Log.d("API", "Failed to send report to remote server.");
+            Log.e("API ERROR", error.toString());
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                JSONArray jsonArray = new JSONArray();
+                locations.stream().map(location -> location.uuid.toString()).distinct().forEach(jsonArray::put);
+
+                return new HashMap<String, String>() {{
+                    put("date", String.valueOf(testDate.getTime()));
+                    put("uuids", jsonArray.toString());
                 }};
             }
 

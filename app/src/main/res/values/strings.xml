@@ -7,6 +7,7 @@
         14 days has recently tested positive. Below you can see when and where you were in contact
         with this person.
     </string>
+    <string name="report_message">Click the following button if you have received a positive test to report it</string>
 
     <!-- Notifications -->
     <string name="service_title">Contact Tracer</string>
@@ -21,6 +22,9 @@
         to be able to carry out the contact tracing.
     </string>
 
+    <!-- Report dialog -->
+    <string name="report_dialog_title">Select the date you received positive result</string>
+
     <!-- Toast -->
     <string name="too_small">That value is too small, the minimum is %d</string>
     <string name="too_large">That value is too large, the maximum is %d</string>
@@ -32,6 +36,7 @@
     <!-- Buttons -->
     <string name="start_button">Start Tracing</string>
     <string name="stop_button">Stop Tracing</string>
+    <string name="report_button">Report Positive Test</string>
 
     <!-- Menu item -->
     <string name="settings_menu_item">Settings</string>

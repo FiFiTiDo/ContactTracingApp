@@ -13,10 +13,14 @@ public class DateUtils {
     public static Date trimDate(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
+        trimCalendar(cal);
+        return cal.getTime();
+    }
+
+    public static void trimCalendar(Calendar cal) {
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
-        return cal.getTime();
     }
 
     /**
