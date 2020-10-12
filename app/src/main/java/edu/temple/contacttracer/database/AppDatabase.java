@@ -66,6 +66,11 @@ public abstract class AppDatabase extends RoomDatabase {
 
         if (lastRun.before(today)) {
             Log.d("DailyTask", "Running daily task...");
+            // Update last run
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putLong(LAST_RUN, DateUtils.now());
+            editor.apply();
+
             new Thread(() -> {
                 generateId();
 
@@ -84,11 +89,6 @@ public abstract class AppDatabase extends RoomDatabase {
                 List<ContactEvent> oldEvents = eventDao.getAllOld();
                 eventDao.deleteAll(oldEvents.toArray(new ContactEvent[]{}));
                 Log.d("DailyTask", "Deleted " + oldEvents.size() + " old contact events");
-
-                // Update last run
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putLong(LAST_RUN, DateUtils.now());
-                editor.apply();
                 Log.d("DailyTask", "Daily task complete.");
             }).start();
         }
