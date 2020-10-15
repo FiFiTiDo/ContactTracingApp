@@ -15,7 +15,7 @@ public interface ContactEventDao {
     List<ContactEvent> getAllOld();
 
     @Query("SELECT * FROM contact_event WHERE sedentary_end <= DATE('now', '-14 day')")
-    List<ContactEvent> getRecent();
+    List<ContactEvent> getAll();
 
     @Insert
     void insert(ContactEvent event);

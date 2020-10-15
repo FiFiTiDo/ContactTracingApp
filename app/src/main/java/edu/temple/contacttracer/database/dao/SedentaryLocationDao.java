@@ -15,7 +15,7 @@ public interface SedentaryLocationDao {
     List<SedentaryLocation> getAllOld();
 
     @Query("SELECT * FROM sedentary_location WHERE sedentary_end <= DATE('now', '-14 day')")
-    List<SedentaryLocation> getRecent();
+    List<SedentaryLocation> getAll();
 
     @Insert
     void insert(SedentaryLocation location);

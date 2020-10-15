@@ -20,7 +20,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -75,7 +74,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.d("Test", "Received message from: " + msg.getFrom() + " with data: " + msg.getData());
         if (msg.getFrom() != null) {
             String payload = msg.getData().get("payload");
-            Log.d("Test", "Received payload: " + payload);
             if (payload == null) return; // No payload value
 
             if (msg.getFrom().equals(TRACKING_TOPIC)) {
@@ -98,7 +96,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 Log.d("Test", "Invalid contact event");
                 return; // Invalid event
             }
-            new Thread(() -> global.getDb().eventDao().insert(event));
+            new Thread(() -> global.getDb().eventDao().insert(event)).start();
             Log.d("Tracing", event.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -115,21 +113,33 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                 // Get own uuids
                 SedentaryLocationDao locationDao = global.getDb().locationDao();
-                List<UUID> myUuids = locationDao.getRecent().stream().map(location -> location.uuid).collect(Collectors.toList());
+                List<UUID> myUuids = locationDao.getAll().stream().map(location -> location.uuid).collect(Collectors.toList());
 
                 // Get contact events
                 ContactEventDao eventDao = global.getDb().eventDao();
-                List<ContactEvent> recentEvents = eventDao.getRecent();
+                List<ContactEvent> recentEvents = eventDao.getAll();
+
+                Log.d("Test", "Received " + jsonUuid.length() + " uuids.");
 
                 for (int i = 0; i < jsonUuid.length(); i++) {
                     UUID uuid = UUID.fromString(jsonUuid.getString(i));
 
-                    for (UUID otherUuid : myUuids)
-                        if (uuid == otherUuid) return; // Is own UUID
+                    for (UUID otherUuid : myUuids) {
+                        if (uuid.toString().equals(otherUuid.toString())) {
+                            Log.d("Test", "Self report");
+                            return;
+                        }
+                    }
 
-                    for (ContactEvent event : recentEvents)
-                        if (uuid == event.uuid)
+                    for (ContactEvent event : recentEvents) {
+                        Log.d("UUID Comparison", "UUID: " + uuid.toString() + ", Event UUID: " + event.uuid.toString() + ", Equals: " + uuid.toString().equals(event.uuid.toString()));
+                        if (uuid.toString().equals(event.uuid.toString())) {
                             onExposure(timestamp, event); // Was in contact with user
+                            return;
+                        }
+                    }
+
+                    Log.d("Test", "No exposure alert");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -148,6 +158,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void onExposure(Date timestamp, ContactEvent event) {
+        Log.d("Trace", "Sending exposure alert: " + event.toString());
         if (global.isInForeground()) {
             Intent intent = new Intent(NEW_TRACE_FILTER);
             intent.putExtra(NEW_TRACE_TIMESTAMP, timestamp);

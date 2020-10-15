@@ -20,7 +20,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import edu.temple.contacttracer.database.entity.SedentaryLocation;
-import edu.temple.contacttracer.support.ApiManager;
 import edu.temple.contacttracer.support.PreferenceUtils;
 import edu.temple.contacttracer.support.interfaces.GlobalStateManager;
 import edu.temple.contacttracer.support.interfaces.PermissionManager;
@@ -37,7 +36,8 @@ public class TrackingService extends Service {
             Log.d("Test", "Device's location has changed");
             if (global.hasLastLocation()) {
                 // Calculate minutes user has been sedentary
-                Long last = global.getLastLocation().getTime();
+                Location lastLocation = global.getLastLocation();
+                Long last = lastLocation.getTime();
                 Long next = nextLocation.getTime();
                 long diffMin = (next - last) / 1000 / 60;
 
@@ -48,7 +48,11 @@ public class TrackingService extends Service {
                 if (diffMin >= PreferenceUtils.getSedentaryLength(TrackingService.this)) {
                     Log.d("Tracing", "User has been sedentary for the configured period of time.");
                     new Thread(() -> {
-                        SedentaryLocation loc = SedentaryLocation.makeFromGlobals(global, nextLocation.getTime());
+                        SedentaryLocation loc = SedentaryLocation.makeFrom(
+                                lastLocation,
+                                global.getDb().uniqueIdDao().getMostRecent(),
+                                nextLocation.getTime()
+                        );
                         global.getDb().locationDao().insert(loc);
                         global.getApiManager().sendLocation(loc);
                     }).start();

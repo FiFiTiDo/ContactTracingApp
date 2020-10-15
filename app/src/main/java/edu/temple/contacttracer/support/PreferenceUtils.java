@@ -17,7 +17,7 @@ public class PreferenceUtils {
     }
 
     public static int getTrackingDistance(Context ctx) {
-        return getInteger(ctx, "tracking_distance", 2);
+        return getInteger(ctx, "tracing_distance", 2);
     }
 
     public static int getSedentaryLength(Context ctx) {

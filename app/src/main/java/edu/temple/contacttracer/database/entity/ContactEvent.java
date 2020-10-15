@@ -108,6 +108,8 @@ public class ContactEvent implements Serializable {
             return false; // Location never retrieved
         }
         Log.d("Test", "Distance to event: " + currentLoc.distanceTo(eventLoc));
+        Log.d("Test", "Maximum distance: " + maxDistance);
+        Log.d("Test", "Is close enough: " + (currentLoc.distanceTo(eventLoc) <= maxDistance));
         return currentLoc.distanceTo(eventLoc) <= maxDistance; // Check if too far
 
     }

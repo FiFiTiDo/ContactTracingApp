@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import edu.temple.contacttracer.support.DateUtils;
 import edu.temple.contacttracer.support.interfaces.GlobalStateManager;
@@ -82,7 +81,7 @@ public class MainPageFragment extends Fragment {
                 report.set(Calendar.MONTH, monthOfYear);
                 report.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 Log.d("Test", "Date selected: " + report.getTime().toString());
-                new Thread(() ->  global.getApiManager().sendReport(global.getDb().locationDao().getRecent(), report.getTime())).start();
+                new Thread(() ->  global.getApiManager().sendReport(global.getDb().locationDao().getAll(), report.getTime())).start();
             }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
 
             dialog.getDatePicker().setMinDate(fourteenDays.getTimeInMillis());

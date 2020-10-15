@@ -18,7 +18,8 @@ import java.util.Map;
 import edu.temple.contacttracer.database.entity.SedentaryLocation;
 
 public class ApiManager {
-    private static final String SERVER_URL = "https://kamorris.com/lab/ct_tracking.php";
+    private static final String TRACKING_URL = "https://kamorris.com/lab/ct_tracking.php";
+    private static final String TRACING_URL = "https://kamorris.com/lab/ct_tracing.php";
     private final RequestQueue queue;
 
     public ApiManager(Context ctx) {
@@ -28,7 +29,7 @@ public class ApiManager {
     public void sendLocation(SedentaryLocation loc) {
         Log.d("API", "Sending location to the remote server");
         Log.d("API Body", loc.toString());
-        StringRequest req = new StringRequest(Request.Method.POST, SERVER_URL, response -> {
+        StringRequest req = new StringRequest(Request.Method.POST, TRACKING_URL, response -> {
             // Success
             if (response.contains("OK"))
                 Log.d("API", "Successfully sent location to remote server.");
@@ -63,7 +64,7 @@ public class ApiManager {
 
     public void sendReport(List<SedentaryLocation> locations, Date testDate) {
         Log.d("API", "Sending positive report to the remote server");
-        StringRequest req = new StringRequest(Request.Method.POST, SERVER_URL, response -> {
+        StringRequest req = new StringRequest(Request.Method.POST, TRACING_URL, response -> {
             // Success
             if (response.contains("OK"))
                 Log.d("API", "Successfully sent report to remote server.");
@@ -79,6 +80,7 @@ public class ApiManager {
             protected Map<String, String> getParams() {
                 JSONArray jsonArray = new JSONArray();
                 locations.stream().map(location -> location.uuid.toString()).distinct().forEach(jsonArray::put);
+                Log.d("API Body", "Date: " + testDate.toString() + ", UUIDs: " + jsonArray.toString());
 
                 return new HashMap<String, String>() {{
                     put("date", String.valueOf(testDate.getTime()));
